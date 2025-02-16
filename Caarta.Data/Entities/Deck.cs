@@ -15,5 +15,6 @@ namespace Caarta.Data.Entities
         public virtual AppUser? Creator { get; set; }
         public virtual ICollection<Card>? Cards { get; set; }
         public byte? Type { get; set; }
+        public virtual ICollection<UserSaveDeck> SavedBy { get; set; }
     }
 }

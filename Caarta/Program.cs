@@ -26,10 +26,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient(typeof(ICrudRepository<>), typeof(CrudRepository<>));
 builder.Services.AddTransient<ICardRepository, CardRepository>();
 builder.Services.AddTransient<IDeckRepository, DeckRepository>();
-builder.Services.AddTransient<IPlaylistRepository, PlaylistRepository>();
 builder.Services.AddTransient<IDeckService, DeckService>();
 builder.Services.AddTransient<ICardService, CardService>();
-builder.Services.AddTransient<IPlaylistService, PlaylistService>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

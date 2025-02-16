@@ -12,9 +12,25 @@ namespace Caarta.Data
             : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<UserSaveDeck>()
+                .HasKey(s => new { s.AppUserId, s.DeckId });
+
+            builder.Entity<UserSaveDeck>()
+                .HasOne(s => s.AppUser)
+                .WithMany(a => a.Saved)
+                .HasForeignKey(s => s.AppUserId);
+
+            builder.Entity<UserSaveDeck>()
+                .HasOne(s => s.Deck)
+                .WithMany(d => d.SavedBy)
+                .HasForeignKey(s => s.DeckId);
+
+        }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Deck> Decks { get; set; }
-        public DbSet<Playlist> Playlists { get; set; }
     }
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {

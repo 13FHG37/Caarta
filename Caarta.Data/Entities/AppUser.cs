@@ -7,14 +7,13 @@ namespace Caarta.Data.Entities
         //user role, inheriting IdentityUser
         public AppUser()
         {
-            Decks = new HashSet<Deck>();
-            Playlists = new HashSet<Playlist>();
+            Created = new HashSet<Deck>();
             ColorThemeId = 0;
         }
 
         public string? ProfilePictureUrl { get; set; }
-        public virtual ICollection<Deck>? Decks { get; set; }
-        public virtual ICollection<Playlist>? Playlists { get; set; }
         public int ColorThemeId { get; set; }
+        public virtual ICollection<Deck> Created { get; set; }
+        public virtual ICollection<UserSaveDeck> Saved { get; set; }
     }
 }

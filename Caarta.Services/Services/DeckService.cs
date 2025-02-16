@@ -9,9 +9,9 @@ namespace Caarta.Services.Services
 {
     public class DeckService : IDeckService
     {
-        private readonly ICrudRepository<Deck> _DeckRepository;
+        private readonly IDeckRepository _DeckRepository;
         private readonly IMapper _mapper;
-        public DeckService(ICrudRepository<Deck> DeckRepository, IMapper mapper)
+        public DeckService(IDeckRepository DeckRepository, IMapper mapper)
         {
             _DeckRepository = DeckRepository;
             _mapper = mapper;

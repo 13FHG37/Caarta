@@ -9,9 +9,9 @@ namespace Caarta.Services.Services
 {
     public class CardService : ICardService
     {
-        private readonly ICrudRepository<Card> _CardRepository;
+        private readonly ICardRepository _CardRepository;
         private readonly IMapper _mapper;
-        public CardService(ICrudRepository<Card> CardRepository, IMapper mapper)
+        public CardService(ICardRepository CardRepository, IMapper mapper)
         {
             _CardRepository = CardRepository;
             _mapper = mapper;

@@ -9,9 +9,9 @@ namespace Caarta.Services.Services
 {
     public class PlaylistService : IPlaylistService
     {
-        private readonly ICrudRepository<Playlist> _PlaylistRepository;
+        private readonly IPlaylistRepository _PlaylistRepository;
         private readonly IMapper _mapper;
-        public PlaylistService(ICrudRepository<Playlist> PlaylistRepository, IMapper mapper)
+        public PlaylistService(IPlaylistRepository PlaylistRepository, IMapper mapper)
         {
             _PlaylistRepository = PlaylistRepository;
             _mapper = mapper;

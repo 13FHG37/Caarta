@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Caarta.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240519103710_Mig_3")]
-    partial class Mig_3
+    [Migration("20250217172953_mk1")]
+    partial class mk1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,23 @@ namespace Caarta.Data.Migrations
                     b.ToTable("Cards");
                 });
 
+            modelBuilder.Entity("Caarta.Data.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("Caarta.Data.Entities.Deck", b =>
                 {
                     b.Property<int>("Id")
@@ -63,29 +80,35 @@ namespace Caarta.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PlaylistId")
-                        .HasColumnType("int");
 
                     b.Property<byte?>("Type")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("CreatorId");
 
-                    b.HasIndex("PlaylistId");
+                    b.HasIndex("LanguageId");
 
                     b.ToTable("Decks");
                 });
 
-            modelBuilder.Entity("Caarta.Data.Entities.Playlist", b =>
+            modelBuilder.Entity("Caarta.Data.Entities.Language", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,21 +116,28 @@ namespace Caarta.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatorId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte?>("Type")
-                        .HasColumnType("tinyint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatorId");
+                    b.ToTable("Languages");
+                });
 
-                    b.ToTable("Playlists");
+            modelBuilder.Entity("Caarta.Data.Entities.UserSaveDeck", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DeckId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "DeckId");
+
+                    b.HasIndex("DeckId");
+
+                    b.ToTable("UserSaveDeck");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -343,24 +373,48 @@ namespace Caarta.Data.Migrations
 
             modelBuilder.Entity("Caarta.Data.Entities.Deck", b =>
                 {
-                    b.HasOne("Caarta.Data.Entities.AppUser", "Creator")
+                    b.HasOne("Caarta.Data.Entities.Category", "Category")
                         .WithMany("Decks")
-                        .HasForeignKey("CreatorId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Caarta.Data.Entities.Playlist", null)
+                    b.HasOne("Caarta.Data.Entities.AppUser", "Creator")
+                        .WithMany("Created")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Caarta.Data.Entities.Language", "Language")
                         .WithMany("Decks")
-                        .HasForeignKey("PlaylistId");
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Creator");
+
+                    b.Navigation("Language");
                 });
 
-            modelBuilder.Entity("Caarta.Data.Entities.Playlist", b =>
+            modelBuilder.Entity("Caarta.Data.Entities.UserSaveDeck", b =>
                 {
-                    b.HasOne("Caarta.Data.Entities.AppUser", "Creator")
-                        .WithMany("Playlists")
-                        .HasForeignKey("CreatorId");
+                    b.HasOne("Caarta.Data.Entities.AppUser", "AppUser")
+                        .WithMany("Saved")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("Creator");
+                    b.HasOne("Caarta.Data.Entities.Deck", "Deck")
+                        .WithMany("SavedBy")
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Deck");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -414,21 +468,28 @@ namespace Caarta.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Caarta.Data.Entities.Category", b =>
+                {
+                    b.Navigation("Decks");
+                });
+
             modelBuilder.Entity("Caarta.Data.Entities.Deck", b =>
                 {
                     b.Navigation("Cards");
+
+                    b.Navigation("SavedBy");
                 });
 
-            modelBuilder.Entity("Caarta.Data.Entities.Playlist", b =>
+            modelBuilder.Entity("Caarta.Data.Entities.Language", b =>
                 {
                     b.Navigation("Decks");
                 });
 
             modelBuilder.Entity("Caarta.Data.Entities.AppUser", b =>
                 {
-                    b.Navigation("Decks");
+                    b.Navigation("Created");
 
-                    b.Navigation("Playlists");
+                    b.Navigation("Saved");
                 });
 #pragma warning restore 612, 618
         }

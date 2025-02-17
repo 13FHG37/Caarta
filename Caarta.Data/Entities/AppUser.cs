@@ -4,7 +4,6 @@ namespace Caarta.Data.Entities
 {
     public class AppUser : IdentityUser
     {
-        //user role, inheriting IdentityUser
         public AppUser()
         {
             Created = new HashSet<Deck>();

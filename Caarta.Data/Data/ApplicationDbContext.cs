@@ -21,16 +21,19 @@ namespace Caarta.Data
             builder.Entity<UserSaveDeck>()
                 .HasOne(s => s.AppUser)
                 .WithMany(a => a.Saved)
-                .HasForeignKey(s => s.AppUserId);
+                .HasForeignKey(s => s.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<UserSaveDeck>()
                 .HasOne(s => s.Deck)
                 .WithMany(d => d.SavedBy)
-                .HasForeignKey(s => s.DeckId);
-
+                .HasForeignKey(s => s.DeckId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Deck> Decks { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {

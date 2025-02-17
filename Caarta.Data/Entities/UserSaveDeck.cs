@@ -8,7 +8,7 @@ namespace Caarta.Data.Entities
 {
     public class UserSaveDeck
     {
-        public int AppUserId { get; set; }
+        public string AppUserId { get; set; }
         public virtual AppUser AppUser { get; set; }
         public int DeckId { get; set; }
         public virtual Deck Deck { get; set; }

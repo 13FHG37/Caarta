@@ -23,16 +23,16 @@ builder.Services.AddDefaultIdentity<AppUser>(options => {
 }).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient(typeof(ICrudRepository<>), typeof(CrudRepository<>));
-builder.Services.AddTransient<ICardRepository, CardRepository>();
-builder.Services.AddTransient<IDeckRepository, DeckRepository>();
-builder.Services.AddTransient<IDeckService, DeckService>();
-builder.Services.AddTransient<ICardService, CardService>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IDeckRepository, DeckRepository>();
+builder.Services.AddScoped<IDeckService, DeckService>();
+builder.Services.AddScoped<ICardService, CardService>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

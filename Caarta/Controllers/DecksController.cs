@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,22 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Caarta.Data;
 using Caarta.Data.Entities;
+using Caarta.Services.Abstractions;
 
 namespace Caarta.Controllers
 {
     public class DecksController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDeckService _deckService;
 
-        public DecksController(ApplicationDbContext context)
+        public DecksController(IDeckService deckService)
         {
-            _context = context;
+            _deckService = deckService;
         }
 
         // GET: Decks
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Decks.ToListAsync());
+            return View(await _deckService.GetDecksAsync());
         }
 
         // GET: Decks/Details/5
@@ -33,8 +34,7 @@ namespace Caarta.Controllers
                 return NotFound();
             }
 
-            var deck = await _context.Decks
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var deck = await _deckService.GetDeckByIdAsync(id.Value);
             if (deck == null)
             {
                 return NotFound();
@@ -46,6 +46,9 @@ namespace Caarta.Controllers
         // GET: Decks/Create
         public IActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id");
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace Caarta.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Type,Id")] Deck deck)
+        public async Task<IActionResult> Create([Bind("Name,CreatorId,CategoryId,LanguageId,Id")] Deck deck)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,9 @@ namespace Caarta.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", deck.CategoryId);
+            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", deck.CreatorId);
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name", deck.LanguageId);
             return View(deck);
         }
 
@@ -78,6 +84,9 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", deck.CategoryId);
+            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", deck.CreatorId);
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name", deck.LanguageId);
             return View(deck);
         }
 
@@ -86,7 +95,7 @@ namespace Caarta.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Type,Id")] Deck deck)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,CreatorId,CategoryId,LanguageId,Id")] Deck deck)
         {
             if (id != deck.Id)
             {
@@ -113,6 +122,9 @@ namespace Caarta.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", deck.CategoryId);
+            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", deck.CreatorId);
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name", deck.LanguageId);
             return View(deck);
         }
 
@@ -125,6 +137,9 @@ namespace Caarta.Controllers
             }
 
             var deck = await _context.Decks
+                .Include(d => d.Category)
+                .Include(d => d.Creator)
+                .Include(d => d.Language)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (deck == null)
             {
@@ -155,3 +170,4 @@ namespace Caarta.Controllers
         }
     }
 }
+*/

@@ -7,14 +7,17 @@ namespace Caarta.Data.Entities
         public Deck()
         {
             Cards = new HashSet<Card>();
-            Type = 0;
         }
+
         public string Name { get; set; }
 
         public string CreatorId { get; set; }
         public virtual AppUser? Creator { get; set; }
         public virtual ICollection<Card>? Cards { get; set; }
-        public byte? Type { get; set; }
         public virtual ICollection<UserSaveDeck> SavedBy { get; set; }
+        public int CategoryId { get; set; }
+        public virtual Category? Category { get; set; }
+        public int LanguageId { get; set; }
+        public virtual Language? Language { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model Caarta.Data.Entities.Deck
+﻿@model DeckDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -20,7 +20,7 @@
             @Html.DisplayNameFor(model => model.Creator)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Creator.Id)
+            @Html.DisplayFor(model => model.Creator.UserName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
@@ -33,6 +33,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Language.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeOfCreation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TimeOfCreation)
         </dd>
     </dl>
 </div>

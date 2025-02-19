@@ -9,44 +9,49 @@ namespace Caarta.Services.Services
 {
     public class DeckService : IDeckService
     {
-        private readonly IDeckRepository _DeckRepository;
+        private readonly IDeckRepository _deckRepository;
         private readonly IMapper _mapper;
-        public DeckService(IDeckRepository DeckRepository, IMapper mapper)
+        public DeckService(IDeckRepository deckRepository, IMapper mapper)
         {
-            _DeckRepository = DeckRepository;
+            _deckRepository = deckRepository;
             _mapper = mapper;
         }
 
-        public async Task AddDeckAsync(DeckDTO model)
+        public async Task CreateAsync(DeckDTO model)
         {
-            var Deck = _mapper
-                .Map<Deck>(model);
+            var deck = _mapper.Map<Deck>(model);
 
-            await _DeckRepository.AddAsync(Deck);
+            await _deckRepository.AddAsync(deck);
         }
 
-        public async Task DeleteDeckByIdAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            await _DeckRepository.DeleteByIdAsync(id);
+            await _deckRepository.DeleteByIdAsync(id);
         }
 
-        public async Task<DeckDTO> GetDeckByIdAsync(int id)
+        public async Task<DeckDTO> GetByIdAsync(int id)
         {
-            var Deck = await _DeckRepository.GetByIdAsync(id);
-            return _mapper.Map<DeckDTO>(Deck);
+            var deck = await _deckRepository.GetByIdAsync(id);
+            return _mapper.Map<DeckDTO>(deck);
         }
 
-        public async Task<List<DeckDTO>> GetDecksAsync()
+        public async Task<ICollection<DeckDTO>> GetAllAsync()
         {
-            var Decks = (await _DeckRepository.GetAllAsync())
+            var decks = (await _deckRepository.GetAllAsync())
                 .ToList();
-            return _mapper.Map<List<DeckDTO>>(Decks);
+            return _mapper.Map<ICollection<DeckDTO>>(decks);
         }
 
-        public async Task UpdateDeckAsync(DeckDTO model)
+        public async Task UpdateAsync(DeckDTO model)
         {
-            var Deck = _mapper.Map<Deck>(model);
-            await _DeckRepository.UpdateAsync(Deck);
+            var deck = _mapper.Map<Deck>(model);
+            await _deckRepository.UpdateAsync(deck);
+        }
+
+        public ICollection<DeckDTO> GetByName(string name)
+        {
+            var decks = _deckRepository.GetAsync(deck => deck.Name == name);
+            return _mapper.Map<ICollection<DeckDTO>>(decks);
         }
     }
 }

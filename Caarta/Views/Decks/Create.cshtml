@@ -1,4 +1,4 @@
-﻿@model Caarta.Data.Entities.Deck
+﻿@model CreateDeckDTO
 
 @{
     ViewData["Title"] = "Create";
@@ -10,25 +10,21 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Name">Name</label>
+                <textarea asp-for="Name" class="form-control"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="CreatorId" class="control-label"></label>
-                <select asp-for="CreatorId" class ="form-control" asp-items="ViewBag.CreatorId"></select>
+                <label asp-for="CategoryId">Category</label>
+                <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <label asp-for="LanguageId">Language</label>
+                <select asp-for="LanguageId" asp-items="Model.Languages" class="form-control"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="LanguageId" class="control-label"></label>
-                <select asp-for="LanguageId" class ="form-control" asp-items="ViewBag.LanguageId"></select>
-            </div>
+            <input type="hidden" asp-for="CreatorId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

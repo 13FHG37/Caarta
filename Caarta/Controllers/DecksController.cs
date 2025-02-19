@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,22 +8,32 @@ using Microsoft.EntityFrameworkCore;
 using Caarta.Data;
 using Caarta.Data.Entities;
 using Caarta.Services.Abstractions;
+using Caarta.Services.DTOs;
+using Caarta.Services.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Caarta.Controllers
 {
     public class DecksController : Controller
     {
         private readonly IDeckService _deckService;
+        private readonly ICategoryService _categoryService;
+        private readonly ILanguageService _languageService;
+        private readonly UserManager<AppUser> _userManager;
 
-        public DecksController(IDeckService deckService)
+        public DecksController(IDeckService deckService, ICategoryService categoryService, ILanguageService languageService, UserManager<AppUser> userManager)
         {
             _deckService = deckService;
+            _categoryService = categoryService;
+            _languageService = languageService;
+            _userManager = userManager;
         }
 
         // GET: Decks
         public async Task<IActionResult> Index()
         {
-            return View(await _deckService.GetDecksAsync());
+            return View(await _deckService.GetAllAsync());
         }
 
         // GET: Decks/Details/5
@@ -34,7 +44,7 @@ namespace Caarta.Controllers
                 return NotFound();
             }
 
-            var deck = await _deckService.GetDeckByIdAsync(id.Value);
+            var deck = await _deckService.GetByIdAsync(id.Value);
             if (deck == null)
             {
                 return NotFound();
@@ -44,34 +54,53 @@ namespace Caarta.Controllers
         }
 
         // GET: Decks/Create
-        public IActionResult Create()
+        [Authorize]
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
-            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id");
-            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name");
-            return View();
+            var userId = (await _userManager.GetUserAsync(User)).Id;
+            if (userId == null)
+            {
+                return NotFound();
+            }
+            var deckDto = new CreateDeckDTO()
+            {
+                CreatorId = userId,
+                Categories = (await _categoryService.GetAllAsync())
+                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                    .ToList(),
+                Languages = (await _languageService.GetAllAsync())
+                    .Select(l => new SelectListItem { Value = l.Id.ToString(), Text =  l.Name})
+                    .ToList()
+            };
+
+            return View(deckDto);
         }
 
         // POST: Decks/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,CreatorId,CategoryId,LanguageId,Id")] Deck deck)
+        public async Task<IActionResult> Create(CreateDeckDTO model)
         {
+            model.TimeOfCreation = DateTime.Now;
             if (ModelState.IsValid)
             {
-                _context.Add(deck);
-                await _context.SaveChangesAsync();
+                await _deckService.CreateAsync(model);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", deck.CategoryId);
-            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", deck.CreatorId);
-            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name", deck.LanguageId);
-            return View(deck);
+            Console.WriteLine("-------------------------------------------------");
+            foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(modelError.ErrorMessage);
+            }
+            Console.WriteLine("-------------------------------------------------");
+            return View(model);
         }
 
         // GET: Decks/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,23 +108,36 @@ namespace Caarta.Controllers
                 return NotFound();
             }
 
-            var deck = await _context.Decks.FindAsync(id);
+            var deck = await _deckService.GetByIdAsync(id.Value);
             if (deck == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", deck.CategoryId);
-            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", deck.CreatorId);
-            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name", deck.LanguageId);
-            return View(deck);
+
+            var createDeck = new CreateDeckDTO()
+            {
+                Name = deck.Name,
+                CreatorId = deck.CreatorId,
+                CategoryId = deck.CategoryId,
+                LanguageId = deck.LanguageId,
+                Categories = (await _categoryService.GetAllAsync())
+                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                    .ToList(),
+                Languages = (await _languageService.GetAllAsync())
+                    .Select(l => new SelectListItem { Value = l.Id.ToString(), Text = l.Name })
+                    .ToList()
+            };
+
+            return View(createDeck);
         }
 
         // POST: Decks/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,CreatorId,CategoryId,LanguageId,Id")] Deck deck)
+        public async Task<IActionResult> Edit(int id, CreateDeckDTO deck)
         {
             if (id != deck.Id)
             {
@@ -106,12 +148,11 @@ namespace Caarta.Controllers
             {
                 try
                 {
-                    _context.Update(deck);
-                    await _context.SaveChangesAsync();
+                    await _deckService.UpdateAsync(deck);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DeckExists(deck.Id))
+                    if (!await DeckExistsAsync(deck.Id))
                     {
                         return NotFound();
                     }
@@ -122,9 +163,6 @@ namespace Caarta.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", deck.CategoryId);
-            ViewData["CreatorId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", deck.CreatorId);
-            ViewData["LanguageId"] = new SelectList(_context.Languages, "Id", "Name", deck.LanguageId);
             return View(deck);
         }
 
@@ -136,11 +174,7 @@ namespace Caarta.Controllers
                 return NotFound();
             }
 
-            var deck = await _context.Decks
-                .Include(d => d.Category)
-                .Include(d => d.Creator)
-                .Include(d => d.Language)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var deck = await _deckService.GetByIdAsync(id.Value);
             if (deck == null)
             {
                 return NotFound();
@@ -154,20 +188,14 @@ namespace Caarta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var deck = await _context.Decks.FindAsync(id);
-            if (deck != null)
-            {
-                _context.Decks.Remove(deck);
-            }
-
-            await _context.SaveChangesAsync();
+            _deckService.DeleteByIdAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DeckExists(int id)
+        private async Task<bool> DeckExistsAsync(int id)
         {
-            return _context.Decks.Any(e => e.Id == id);
+            var deck = await _deckService.GetByIdAsync(id);
+            return deck != null;
         }
     }
 }
-*/

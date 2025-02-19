@@ -12,5 +12,6 @@ namespace Caarta.Data.Entities
         public virtual AppUser AppUser { get; set; }
         public int DeckId { get; set; }
         public virtual Deck Deck { get; set; }
+        public DateTime TimeOfSaving { get; set; }
     }
 }

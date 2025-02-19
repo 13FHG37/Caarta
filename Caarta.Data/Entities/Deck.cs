@@ -19,5 +19,6 @@ namespace Caarta.Data.Entities
         public virtual Category? Category { get; set; }
         public int LanguageId { get; set; }
         public virtual Language? Language { get; set; }
+        public DateTime TimeOfCreation { get; set; }
     }
 }

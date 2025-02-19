@@ -5,10 +5,11 @@ namespace Caarta.Services.Abstractions
 {
     public interface IDeckService
     {
-        Task<List<DeckDTO>> GetDecksAsync();
-        Task<DeckDTO> GetDeckByIdAsync(int id);
-        Task AddDeckAsync(DeckDTO card);
-        Task DeleteDeckByIdAsync(int id);
-        Task UpdateDeckAsync(DeckDTO deck);
+        Task<ICollection<DeckDTO>> GetAllAsync();
+        Task<DeckDTO> GetByIdAsync(int id);
+        ICollection<DeckDTO> GetByName(string name);
+        Task CreateAsync(DeckDTO deck);
+        Task DeleteByIdAsync(int id);
+        Task UpdateAsync(DeckDTO deck);
     }
 }

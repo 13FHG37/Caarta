@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Caarta.Data.Entities.Deck>
+﻿@model IEnumerable<DeckDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -24,6 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Language)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfCreation)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -34,13 +37,16 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Creator.Id)
+                @Html.DisplayFor(modelItem => item.Creator.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Language.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeOfCreation)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

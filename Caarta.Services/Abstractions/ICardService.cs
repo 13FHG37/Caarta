@@ -1,14 +1,15 @@
-﻿using Caarta.Services.DTOs;
+﻿using Caarta.Data.Entities;
+using Caarta.Services.DTOs;
 
 
 namespace Caarta.Services.Abstractions
 {
     public interface ICardService
     {
-        Task<List<CardDTO>> GetCardsAsync();
-        Task<CardDTO> GetCardByIdAsync(int id);
-        Task AddCardAsync(CardDTO card);
-        Task DeleteCardByIdAsync(int id);
-        Task UpdateCardAsync(CardDTO card);
+        Task<ICollection<CardDTO>> GetAllAsync();
+        Task<CardDTO> GetByIdAsync(int id);
+        Task CreateAsync(CardDTO card);
+        Task DeleteByIdAsync(int id);
+        Task UpdateAsync(CardDTO card);
     }
 }

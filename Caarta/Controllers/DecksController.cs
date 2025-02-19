@@ -12,6 +12,8 @@ using Caarta.Services.DTOs;
 using Caarta.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Hosting;
+using Caarta.Services;
 
 namespace Caarta.Controllers
 {
@@ -21,13 +23,15 @@ namespace Caarta.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ILanguageService _languageService;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IWebHostEnvironment _environment;
 
-        public DecksController(IDeckService deckService, ICategoryService categoryService, ILanguageService languageService, UserManager<AppUser> userManager)
+        public DecksController(IDeckService deckService, ICategoryService categoryService, ILanguageService languageService, UserManager<AppUser> userManager, IWebHostEnvironment environment)
         {
             _deckService = deckService;
             _categoryService = categoryService;
             _languageService = languageService;
             _userManager = userManager;
+            _environment = environment;
         }
 
         // GET: Decks
@@ -70,7 +74,8 @@ namespace Caarta.Controllers
                     .ToList(),
                 Languages = (await _languageService.GetAllAsync())
                     .Select(l => new SelectListItem { Value = l.Id.ToString(), Text =  l.Name})
-                    .ToList()
+                    .ToList(),
+                Cards = new List<CreateCardDTO> { new CreateCardDTO() }
             };
 
             return View(deckDto);
@@ -83,11 +88,41 @@ namespace Caarta.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateDeckDTO model)
-        {
+        {      
             model.TimeOfCreation = DateTime.Now;
             if (ModelState.IsValid)
             {
-                await _deckService.CreateAsync(model);
+                foreach (var card in model.Cards)
+                {
+                    if (card.FrontPicture != null && card.FrontPicture.Length > 0)
+                    {
+                        var newFileName = await FileUpload.UploadAsync(card.FrontPicture, _environment.WebRootPath);
+                        card.FrontPictureUrl = newFileName;
+                    }
+                    if (card.BackPicture != null && card.BackPicture.Length > 0)
+                    {
+                        var newFileName = await FileUpload.UploadAsync(card.BackPicture, _environment.WebRootPath);
+                        card.BackPictureUrl = newFileName;
+                    }
+                    
+                }
+                var deck = new DeckDTO()
+                {
+                    Name = model.Name,
+                    CreatorId = model.CreatorId,
+                    CategoryId = model.CategoryId,
+                    LanguageId = model.LanguageId,
+                    TimeOfCreation = model.TimeOfCreation,
+                    Cards = model.Cards.Select(c => new CardDTO
+                    {
+                        FrontText = c.FrontText,
+                        BackText = c.BackText,
+                        FrontPictureUrl = c.FrontPictureUrl,
+                        BackPictureUrl = c.BackPictureUrl
+                    }).ToList()
+                };
+                await _deckService.CreateAsync(deck);
+
                 return RedirectToAction(nameof(Index));
             }
             Console.WriteLine("-------------------------------------------------");
@@ -188,7 +223,7 @@ namespace Caarta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _deckService.DeleteByIdAsync(id);
+            await _deckService.DeleteByIdAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

@@ -42,7 +42,43 @@
         </dd>
     </dl>
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Front Text
+            </th>
+            <th>
+                Front Image
+            </th>
+            <th>
+                Back Text
+            </th>
+            <th>
+                Back Image
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Cards)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FrontText)
+                </td>
+                <td>
+                    <img style="height:100px; width:auto" src="~/uploads/@item.FrontPictureUrl" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BackText)
+                </td>
+                <td>
+                    <img style="height:100px; width:auto" src="~/uploads/@item.BackPictureUrl" />
+                </td>
+            </tr>
+        }
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
     <a asp-action="Index">Back to List</a>
 </div>

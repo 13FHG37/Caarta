@@ -26,5 +26,8 @@
 		<ProjectReference Include="..\Caarta.Services\Caarta.Services.csproj" />
 
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="wwwroot\uploads\" />
+	</ItemGroup>
 
 </Project>

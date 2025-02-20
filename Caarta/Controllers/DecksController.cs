@@ -61,6 +61,7 @@ namespace Caarta.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
+
             var userId = (await _userManager.GetUserAsync(User)).Id;
             if (userId == null)
             {
@@ -149,6 +150,11 @@ namespace Caarta.Controllers
                 return NotFound();
             }
 
+            if (deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            {
+                return NotFound();
+            }
+
             var createDeck = new CreateDeckDTO()
             {
                 Name = deck.Name,
@@ -178,7 +184,10 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
-
+            if (deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -202,6 +211,7 @@ namespace Caarta.Controllers
         }
 
         // GET: Decks/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -214,15 +224,24 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
+            if (deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            {
+                return NotFound();
+            }
 
             return View(deck);
         }
 
         // POST: Decks/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if ((await _deckService.GetByIdAsync(id)).CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            {
+                return NotFound();
+            }
             await _deckService.DeleteByIdAsync(id);
             return RedirectToAction(nameof(Index));
         }
@@ -233,6 +252,7 @@ namespace Caarta.Controllers
             return deck != null;
         }
 
+        [Authorize]
         public async Task<IActionResult> Save(int id)
         {
             var deck = await _deckService.GetByIdAsync(id);

@@ -61,6 +61,10 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
+            if (!User.IsInRole("Admin") && id != (await _userManager.GetUserAsync(User)).Id)
+            {
+                return NotFound();
+            }
 
             var createUser = new UserEditViewModel()
             {
@@ -81,6 +85,10 @@ namespace Caarta.Controllers
         public async Task<IActionResult> Edit(string id, UserEditViewModel model)
         {
             if (id != model.Id)
+            {
+                return NotFound();
+            }
+            if (!User.IsInRole("Admin") && id != (await _userManager.GetUserAsync(User)).Id)
             {
                 return NotFound();
             }
@@ -128,6 +136,7 @@ namespace Caarta.Controllers
         }
 
         // GET: Decks/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -140,17 +149,26 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
+            if (!User.IsInRole("Admin") && id != user.Id)
+            {
+                return NotFound();
+            }
 
             return View(user);
         }
 
         // POST: Decks/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
+            {
+                return NotFound();
+            }
+            if (!User.IsInRole("Admin") && id != user.Id)
             {
                 return NotFound();
             }
@@ -163,7 +181,5 @@ namespace Caarta.Controllers
             var user = await _userManager.FindByIdAsync(id);
             return user != null;
         }
-
-
     }
 }

@@ -9,6 +9,7 @@ using Caarta.Data;
 using Caarta.Data.Entities;
 using Caarta.Services.Abstractions;
 using Caarta.Services.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Caarta.Controllers
 {
@@ -45,6 +46,7 @@ namespace Caarta.Controllers
         }
 
         // GET: Languages/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +55,7 @@ namespace Caarta.Controllers
         // POST: Languages/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Id")] LanguageDTO language)
@@ -66,6 +69,7 @@ namespace Caarta.Controllers
         }
 
         // GET: Languages/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,6 +88,7 @@ namespace Caarta.Controllers
         // POST: Languages/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Name,Id")] LanguageDTO language)
@@ -116,6 +121,7 @@ namespace Caarta.Controllers
         }
 
         // GET: Languages/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,6 +139,7 @@ namespace Caarta.Controllers
         }
 
         // POST: Languages/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

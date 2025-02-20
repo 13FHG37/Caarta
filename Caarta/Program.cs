@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Caarta.Services.Abstractions;
 using Caarta.Services.Services;
 using Microsoft.AspNetCore.Identity;
-using CatsMVC.Data.Seeders;
+using Caarta.Data.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,12 +18,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseLazyLoadingProxies();
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+
+builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddDefaultIdentity<AppUser>(options => {
-    options.SignIn.RequireConfirmedAccount = false;
-}).AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ICardRepository, CardRepository>();

@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Caarta.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CatsMVC.Data.Seeders
+namespace Caarta.Data.Seeders
 {
     public static class UserSeeder
     {
         public static async Task Initialize(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
 
             string[] roleNames = { "Admin", "User" };
             foreach (var role in roleNames)
@@ -20,7 +21,7 @@ namespace CatsMVC.Data.Seeders
                 }
             }
 
-            var adminuser = new IdentityUser
+            var adminuser = new AppUser
             {
                 UserName = "admin@admin.com",
                 Email = "admin@admin.com",

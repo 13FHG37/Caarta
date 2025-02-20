@@ -31,8 +31,8 @@
 
     </dl>
 </div>
+<h4> Created Decks</h4>
 <table class="table">
-    <h4>Decks</h4>
     <thead>
         <tr>
             <th>
@@ -76,6 +76,55 @@
                     <a asp-controller="Decks" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-controller="Decks" asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-controller="Decks" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h4>Saved Decks</h4>
+<table class="table">  
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Creator
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Language
+            </th>
+            <th>
+                Time of creation
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+        @foreach (var item in Model.Saved)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deck.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deck.Creator.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deck.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deck.Language.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deck.TimeOfCreation)
+                </td>
+                <td>
+                    <a asp-controller="Decks" asp-action="Edit" asp-route-id="@item.Deck.Id">Edit</a> |
+                    <a asp-controller="Decks" asp-action="Details" asp-route-id="@item.Deck.Id">Details</a> |
+                    <a asp-controller="Decks" asp-action="Delete" asp-route-id="@item.Deck.Id">Delete</a>
                 </td>
             </tr>
         }

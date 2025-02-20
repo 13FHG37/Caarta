@@ -34,6 +34,7 @@ namespace Caarta.Data
         public DbSet<Deck> Decks { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<UserSaveDeck> UserSaveDeck { get; set; }
     }
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {

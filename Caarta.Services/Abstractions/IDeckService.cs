@@ -11,5 +11,6 @@ namespace Caarta.Services.Abstractions
         Task CreateAsync(DeckDTO deck);
         Task DeleteByIdAsync(int id);
         Task UpdateAsync(DeckDTO deck);
+        Task AddUserSaveDeckAsync(UserSaveDeckDTO userSaveDeckDTO);
     }
 }

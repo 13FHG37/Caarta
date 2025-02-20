@@ -10,11 +10,13 @@ namespace Caarta.Services.Services
     public class DeckService : IDeckService
     {
         private readonly IDeckRepository _deckRepository;
+        private readonly IUserSaveDeckRepository _userSaveDeckRepository;
         private readonly IMapper _mapper;
-        public DeckService(IDeckRepository deckRepository, IMapper mapper)
+        public DeckService(IDeckRepository deckRepository, IMapper mapper,  IUserSaveDeckRepository userSaveDeckRepository)
         {
             _deckRepository = deckRepository;
             _mapper = mapper;
+            _userSaveDeckRepository = userSaveDeckRepository;
         }
 
         public async Task CreateAsync(DeckDTO model)
@@ -53,5 +55,12 @@ namespace Caarta.Services.Services
             var decks = _deckRepository.GetAsync(deck => deck.Name == name);
             return _mapper.Map<ICollection<DeckDTO>>(decks);
         }
+
+        public async Task AddUserSaveDeckAsync(UserSaveDeckDTO userSaveDeckDTO)
+        {
+            var visit = _mapper.Map<UserSaveDeck>(userSaveDeckDTO);
+            await _userSaveDeckRepository.CreateAsync(visit);
+        }
+
     }
 }

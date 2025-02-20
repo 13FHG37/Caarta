@@ -240,8 +240,23 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
-
-            return View(deck);
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if (user.Saved.Any(item => item.DeckId == id))
+            {
+                return NotFound();
+            }
+            var userSaveDeck = new UserSaveDeckDTO()
+            {
+                DeckId = deck.Id,
+                AppUserId = user.Id,
+                TimeOfSaving = DateTime.Now
+            };
+            await _deckService.AddUserSaveDeckAsync(userSaveDeck);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

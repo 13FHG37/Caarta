@@ -9,7 +9,7 @@
          </div>
          <div class="form-group">
              <label for="Cards_${index}__FrontPicture">Front Picture</label>
-             <input id="Cards_${index}__FrontPicture" name="Cards[${index}].FrontPicture" type="file" class="form-control-file" />
+             <input type="file" accept="image/jpg, image/png" id="Cards_${index}__FrontPicture" name="Cards[${index}].FrontPicture" type="file" class="form-control-file" />
          </div>
          <div class="form-group">
              <label for="Cards_${index}__BackText">Back Text</label>
@@ -17,7 +17,7 @@
          </div>
          <div class="form-group">
              <label for="Cards_${index}__BackPicture">Back Picture</label>
-             <input id="Cards_${index}__BackPicture" name="Cards[${index}].BackPicture" type="file" class="form-control-file" />
+             <input type="file" accept="image/jpg, image/png" id="Cards_${index}__BackPicture" name="Cards[${index}].BackPicture" type="file" class="form-control-file" />
          </div>`
     )
 }

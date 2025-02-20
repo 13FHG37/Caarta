@@ -232,5 +232,16 @@ namespace Caarta.Controllers
             var deck = await _deckService.GetByIdAsync(id);
             return deck != null;
         }
+
+        public async Task<IActionResult> Save(int id)
+        {
+            var deck = await _deckService.GetByIdAsync(id);
+            if (deck == null)
+            {
+                return NotFound();
+            }
+
+            return View(deck);
+        }
     }
 }

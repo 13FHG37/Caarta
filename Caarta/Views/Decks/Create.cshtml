@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Cards[0].FrontPicture">Front Picture</label>
-                    <input asp-for="Cards[0].FrontPicture" type="file" class="form-control-file" />
+                    <input type ="file" accept="image/jpeg, image/png" asp-for="Cards[0].FrontPicture" type="file" class="form-control-file" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Cards[0].BackText">Back Text</label>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Cards[0].BackPicture">Back Picture</label>
-                    <input asp-for="Cards[0].BackPicture" type="file" class="form-control-file" />
+                    <input type="file" accept="image/jpeg, image/png" asp-for="Cards[0].BackPicture" type="file" class="form-control-file" />
                 </div>
             </div>
             <a href="javascript:void(0);" onclick="addCard()" class="add-card">

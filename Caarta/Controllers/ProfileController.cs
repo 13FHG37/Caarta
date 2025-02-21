@@ -123,7 +123,7 @@ namespace Caarta.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Profile", new { id = user.Id });
             }
             Console.WriteLine("-------------------------------------------------");
             foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
@@ -149,7 +149,7 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
-            if (!User.IsInRole("Admin") && id != user.Id)
+            if (!User.IsInRole("Admin") && id != (await _userManager.GetUserAsync(User)).Id)
             {
                 return NotFound();
             }

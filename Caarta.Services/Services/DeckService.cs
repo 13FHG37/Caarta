@@ -12,7 +12,7 @@ namespace Caarta.Services.Services
         private readonly IDeckRepository _deckRepository;
         private readonly IUserSaveDeckRepository _userSaveDeckRepository;
         private readonly IMapper _mapper;
-        public DeckService(IDeckRepository deckRepository, IMapper mapper,  IUserSaveDeckRepository userSaveDeckRepository)
+        public DeckService(IDeckRepository deckRepository, IMapper mapper, IUserSaveDeckRepository userSaveDeckRepository)
         {
             _deckRepository = deckRepository;
             _mapper = mapper;
@@ -58,9 +58,13 @@ namespace Caarta.Services.Services
 
         public async Task AddUserSaveDeckAsync(UserSaveDeckDTO userSaveDeckDTO)
         {
-            var visit = _mapper.Map<UserSaveDeck>(userSaveDeckDTO);
-            await _userSaveDeckRepository.CreateAsync(visit);
+            var save = _mapper.Map<UserSaveDeck>(userSaveDeckDTO);
+            await _userSaveDeckRepository.CreateAsync(save);
         }
-
+        public async Task DeleteUserSaveDeckAsync(UserSaveDeckDTO userSaveDeckDTO)
+        {
+            var save = _mapper.Map<UserSaveDeck>(userSaveDeckDTO);
+            await _userSaveDeckRepository.DeleteAsync(save);
+        }
     }
 }

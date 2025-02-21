@@ -74,7 +74,7 @@ namespace Caarta.Controllers
                     .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
                     .ToList(),
                 Languages = (await _languageService.GetAllAsync())
-                    .Select(l => new SelectListItem { Value = l.Id.ToString(), Text =  l.Name})
+                    .Select(l => new SelectListItem { Value = l.Id.ToString(), Text = l.Name })
                     .ToList(),
                 Cards = new List<CreateCardDTO> { new CreateCardDTO() }
             };
@@ -89,7 +89,7 @@ namespace Caarta.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateDeckDTO model)
-        {      
+        {
             model.TimeOfCreation = DateTime.Now;
             if (ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace Caarta.Controllers
                         var newFileName = await FileUpload.UploadAsync(card.BackPicture, _environment.WebRootPath);
                         card.BackPictureUrl = newFileName;
                     }
-                    
+
                 }
                 var deck = new DeckDTO()
                 {
@@ -150,7 +150,7 @@ namespace Caarta.Controllers
                 return NotFound();
             }
 
-            if (deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            if (!User.IsInRole("Admin") && deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
             {
                 return NotFound();
             }
@@ -166,7 +166,9 @@ namespace Caarta.Controllers
                     .ToList(),
                 Languages = (await _languageService.GetAllAsync())
                     .Select(l => new SelectListItem { Value = l.Id.ToString(), Text = l.Name })
-                    .ToList()
+                    .ToList(),
+                IsPublic = deck.IsPublic,
+                TimeOfCreation = deck.TimeOfCreation
             };
 
             return View(createDeck);
@@ -184,7 +186,7 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
-            if (deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            if (!User.IsInRole("Admin") && deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
             {
                 return NotFound();
             }
@@ -224,7 +226,7 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
-            if (deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            if (!User.IsInRole("Admin") && deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
             {
                 return NotFound();
             }
@@ -238,7 +240,7 @@ namespace Caarta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if ((await _deckService.GetByIdAsync(id)).CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            if (!User.IsInRole("Admin") && (await _deckService.GetByIdAsync(id)).CreatorId != (await _userManager.GetUserAsync(User)).Id)
             {
                 return NotFound();
             }
@@ -276,6 +278,34 @@ namespace Caarta.Controllers
                 TimeOfSaving = DateTime.Now
             };
             await _deckService.AddUserSaveDeckAsync(userSaveDeck);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Unsave(int id)
+        {
+            var deck = await _deckService.GetByIdAsync(id);
+            if (deck == null)
+            {
+                return NotFound();
+            }
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var saved = user.Saved.Where(item => item.DeckId == id).ToList()[0];
+            if (saved == null)
+            {
+                return NotFound();
+            }
+            var savedDto = new UserSaveDeckDTO()
+            {
+                AppUserId = saved.AppUserId,
+                DeckId = saved.DeckId,
+                TimeOfSaving = saved.TimeOfSaving
+            };
+            await _deckService.DeleteUserSaveDeckAsync(savedDto);
             return RedirectToAction(nameof(Index));
         }
     }

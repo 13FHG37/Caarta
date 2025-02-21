@@ -1,0 +1,49 @@
+﻿@model CreateCardDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Card</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FrontText">Front Text</label>
+                <textarea asp-for="FrontText" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="FrontPicture">Front Picture</label>
+                <input type="file" accept="image/jpeg, image/png" asp-for="FrontPicture" type="file" class="form-control-file" />
+            </div>
+            <div class="form-group">
+                <label asp-for="BackText">Back Text</label>
+                <textarea asp-for="BackText" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="BackPicture">Back Picture</label>
+                <input type="file" accept="image/jpeg, image/png" asp-for="BackPicture" type="file" class="form-control-file" />
+            </div>
+            <input type="hidden" asp-for="DeckId" />
+            <input type="hidden" asp-for="FrontPictureUrl" />
+            <input type="hidden" asp-for="BackPictureUrl" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

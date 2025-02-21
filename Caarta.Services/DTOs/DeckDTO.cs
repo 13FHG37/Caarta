@@ -15,5 +15,6 @@ namespace Caarta.Services.DTOs
         public int LanguageId { get; set; }
         public virtual LanguageDTO? Language { get; set; }
         public DateTime TimeOfCreation { get; set; }
+        public bool IsPublic { get; set; }
     }
 }

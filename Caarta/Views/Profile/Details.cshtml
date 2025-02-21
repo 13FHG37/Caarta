@@ -23,6 +23,12 @@
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class="col-sm-2">
+            Profile Picture
+        </dt>
+        <dd class="col-sm-10">
+            <img style="height:100px; width:auto" src="~/uploads/@Model.ProfilePictureUrl" />
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ColorThemeId)
         </dt>
         <dd class="col-sm-10">
@@ -31,6 +37,8 @@
 
     </dl>
 </div>
+<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+<a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
 <h4> Created Decks</h4>
 <table class="table">
     <thead>
@@ -122,6 +130,7 @@
                     @Html.DisplayFor(modelItem => item.Deck.TimeOfCreation)
                 </td>
                 <td>
+                    <a asp-controller="Decks" asp-action="Unsave" asp-route-id="@item.Deck.Id">Unsave</a> |
                     <a asp-controller="Decks" asp-action="Edit" asp-route-id="@item.Deck.Id">Edit</a> |
                     <a asp-controller="Decks" asp-action="Details" asp-route-id="@item.Deck.Id">Details</a> |
                     <a asp-controller="Decks" asp-action="Delete" asp-route-id="@item.Deck.Id">Delete</a>

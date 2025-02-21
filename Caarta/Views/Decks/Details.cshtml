@@ -35,6 +35,12 @@
             @Html.DisplayFor(model => model.Language.Name)
         </dd>
         <dt class="col-sm-2">
+            Visibility
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.IsPublic ? "Public" : "Private")
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TimeOfCreation)
         </dt>
         <dd class="col-sm-10">
@@ -42,6 +48,13 @@
         </dd>
     </dl>
 </div>
+<div>
+    <a asp-controller="Cards" asp-action="Create" asp-route-id="@Model?.Id">Add Card</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -57,6 +70,7 @@
             <th>
                 Back Image
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -67,18 +81,26 @@
                     @Html.DisplayFor(modelItem => item.FrontText)
                 </td>
                 <td>
-                    <img style="height:100px; width:auto" src="~/uploads/@item.FrontPictureUrl" />
+                    @if (item.FrontPictureUrl != null) {
+                        <img style="height:100px; width:auto" src="~/uploads/@item.FrontPictureUrl" />
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.BackText)
                 </td>
                 <td>
-                    <img style="height:100px; width:auto" src="~/uploads/@item.BackPictureUrl" />
+                    @if (item.BackPictureUrl != null)
+                    {
+                        <img style="height:100px; width:auto" src="~/uploads/@item.BackPictureUrl" />
+                    }
+                </td>
+                <td>
+                    <a asp-controller="Cards" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Cards" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="Cards" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
+
         }
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    </tbody>
+</table>

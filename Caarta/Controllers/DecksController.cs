@@ -308,5 +308,26 @@ namespace Caarta.Controllers
             await _deckService.DeleteUserSaveDeckAsync(savedDto);
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> CheckYourself(int id)
+        {
+            var deck = await _deckService.GetByIdAsync(id);
+            if (deck == null)
+            {
+                return NotFound();
+            }
+
+            return View(deck);
+        }
+        public async Task<IActionResult> Test(int id)
+        {
+            var deck = await _deckService.GetByIdAsync(id);
+            if (deck == null)
+            {
+                return NotFound();
+            }
+
+            return View(deck);
+        }
     }
 }

@@ -1,0 +1,46 @@
+﻿@model DeckDTO
+
+@{
+    ViewData["Title"] = "Check Yourself";
+    var cards = Model.Cards.ToList(); // Get all cards
+}
+
+<div id="cards-container" class="d-flex justify-content-center align-items-center vh-100">
+    <button class="know-button" onclick="handleButtonClick('no')">
+        <img src="~/img/NO.png" />
+    </button>
+    <div class="card-container" onclick="flipCard(this)">
+        <div class="card-inner">
+            <div class="card-front d-flex flex-column">
+                @if (!string.IsNullOrEmpty(cards[0].FrontPictureUrl))
+                {
+                    <img src="~/uploads/@cards[0].FrontPictureUrl" class="card-img">
+                }
+                <div class="card-text-box">
+                    <p class="card-text">@cards[0].FrontText</p>
+                </div>
+            </div>
+
+            <div class="card-back d-flex flex-column">
+                @if (!string.IsNullOrEmpty(cards[0].BackPictureUrl))
+                {
+                    <img src="~/uploads/@cards[0].BackPictureUrl" class="card-img">
+                }
+                <div class="card-text-box">
+                    <p class="card-text">@cards[0].BackText</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="know-button" onclick="handleButtonClick('yes')">
+        <img src="~/img/YES.png" />
+    </button>
+</div>
+
+<script src="~/js/CheckYourself.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

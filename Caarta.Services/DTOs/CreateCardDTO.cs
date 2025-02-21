@@ -11,5 +11,6 @@ namespace Caarta.Services.DTOs
     {
         public IFormFile? FrontPicture { get; set; }
         public IFormFile? BackPicture { get; set; }
+        public string CreatorId { get; set; }
     }
 }

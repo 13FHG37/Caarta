@@ -8,6 +8,7 @@ namespace Caarta.Data.Entities
         {
             Created = new HashSet<Deck>();
             ColorThemeId = 0;
+            ProfilePictureUrl = "user.png";
         }
 
         public string? ProfilePictureUrl { get; set; }

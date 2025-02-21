@@ -139,6 +139,7 @@ namespace Caarta.Controllers
 
             var createCard = new CreateCardDTO()
             {
+                CreatorId = card.Deck.CreatorId,
                 DeckId = card.DeckId,
                 FrontText = card.FrontText,
                 BackText = card.BackText,
@@ -161,8 +162,7 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
-
-            if (!User.IsInRole("Admin") && card.Deck.CreatorId != (await _userManager.GetUserAsync(User)).Id)
+            if (!User.IsInRole("Admin") && card.CreatorId != (await _userManager.GetUserAsync(User)).Id)
             {
                 return NotFound();
             }

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    int index = 1;
 }
 
 <h1>Create</h1>
@@ -34,20 +35,20 @@
             <div class="create-card-container">
 				<label>Cards</label>
                 <div class="form-group">
-                    <label asp-for="Cards[0].FrontText">Front Text</label>
-                    <textarea asp-for="Cards[0].FrontText" class="form-control"></textarea>
+                    <label asp-for="CreateCards[0].FrontText">Front Text</label>
+                    <textarea asp-for="CreateCards[0].FrontText" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Cards[0].FrontPicture">Front Picture</label>
-                    <input type ="file" accept="image/jpeg, image/png" asp-for="Cards[0].FrontPicture" type="file" class="form-control-file" />
+                    <label asp-for="CreateCards[0].FrontPicture">Front Picture</label>
+                    <input accept="image/jpeg, image/png" asp-for="CreateCards[0].FrontPicture" type="file" class="form-control-file" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Cards[0].BackText">Back Text</label>
-                    <textarea asp-for="Cards[0].BackText" class="form-control"></textarea>
+                    <label asp-for="CreateCards[0].BackText">Back Text</label>
+                    <textarea asp-for="CreateCards[0].BackText" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Cards[0].BackPicture">Back Picture</label>
-                    <input type="file" accept="image/jpeg, image/png" asp-for="Cards[0].BackPicture" type="file" class="form-control-file" />
+                    <label asp-for="CreateCards[0].BackPicture">Back Picture</label>
+                    <input accept="image/jpeg, image/png" asp-for="CreateCards[0].BackPicture" type="file" class="form-control-file" />
                 </div>
             </div>
             <a href="javascript:void(0);" onclick="addCard()" class="add-card">

@@ -76,7 +76,7 @@ namespace Caarta.Controllers
                 Languages = (await _languageService.GetAllAsync())
                     .Select(l => new SelectListItem { Value = l.Id.ToString(), Text = l.Name })
                     .ToList(),
-                Cards = new List<CreateCardDTO> { new CreateCardDTO() }
+                CreateCards = new List<CreateCardDTO> { new CreateCardDTO() }
             };
 
             return View(deckDto);
@@ -93,7 +93,7 @@ namespace Caarta.Controllers
             model.TimeOfCreation = DateTime.Now;
             if (ModelState.IsValid)
             {
-                foreach (var card in model.Cards)
+                foreach (var card in model.CreateCards)
                 {
                     if (card.FrontPicture != null && card.FrontPicture.Length > 0)
                     {
@@ -114,7 +114,7 @@ namespace Caarta.Controllers
                     CategoryId = model.CategoryId,
                     LanguageId = model.LanguageId,
                     TimeOfCreation = model.TimeOfCreation,
-                    Cards = model.Cards.Select(c => new CardDTO
+                    Cards = model.CreateCards.Select(c => new CardDTO
                     {
                         FrontText = c.FrontText,
                         BackText = c.BackText,
@@ -316,8 +316,23 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
+            var simpleDeck = new DeckSimpleDTO()
+            {
+                Id = deck.Id,
+                Name = deck.Name,
+                CategoryId = deck.CategoryId,
+                LanguageId = deck.LanguageId,
+                TimeOfCreation = deck.TimeOfCreation,
+                SimpleCards = deck.Cards.Select(c => new CardSimpleDTO
+                {
+                    FrontText = c.FrontText,
+                    BackText = c.BackText,
+                    FrontPictureUrl = c.FrontPictureUrl,
+                    BackPictureUrl = c.BackPictureUrl
+                }).ToList()
+            };
 
-            return View(deck);
+            return View(simpleDeck);
         }
         public async Task<IActionResult> Test(int id)
         {

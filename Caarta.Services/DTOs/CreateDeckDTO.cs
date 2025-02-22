@@ -11,6 +11,6 @@ namespace Caarta.Services.DTOs
     {
         public List<SelectListItem>? Categories { get; set; }
         public List<SelectListItem>? Languages { get; set; }
-        public List<CreateCardDTO> Cards { get; set; } = new List<CreateCardDTO>();
+        public List<CreateCardDTO> CreateCards { get; set; } = new List<CreateCardDTO>();
     }
 }

@@ -29,11 +29,36 @@ header {
 
 /* ----------------------------------------------------- */
 
+.my-main {
+    margin-top: 4rem;
+}
+
 .card-container {
     width: 500px;
     height: 400px;
     position: relative;
     perspective: 1000px;
+    margin: 20px;
+}
+
+.card-container-choice {
+    width: 250px;
+    height: 200px;
+    position: relative;
+    perspective: 1000px;
+    margin: 20px;
+    transform: scale(1);
+    transition: all 200ms;
+}
+
+.card-container-choice:hover {
+    transform: scale(1.1);
+    transition: all 200ms;
+}
+
+.card-container-choice:active > * .card-front {
+    background-color: #cccccc;
+    transition: all 200ms;
 }
 
 .card-inner {
@@ -90,9 +115,17 @@ header {
 }
 
 .card-text {
-    font-size: 1.2rem;
+    font-size: 2em;
     font-weight: bold;
     margin: 0;
+    word-wrap: break-word;
+}
+
+.card-text-choice {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    word-wrap: break-word;
 }
 
 .know-button {
@@ -108,7 +141,6 @@ header {
     padding: 10px;
     border: none;
     transform: scale(1.0);
-    margin: 20px;
     transition: all 200ms;
 }
 

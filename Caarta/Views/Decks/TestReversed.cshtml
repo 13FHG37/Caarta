@@ -13,19 +13,18 @@
         <div class="card-container">
             <div class="card-inner">
                 <div class="card-front d-flex flex-column">
-                    @if (!string.IsNullOrEmpty(cards[0].FrontPictureUrl))
+                    @if (!string.IsNullOrEmpty(cards[0].BackPictureUrl))
                     {
-                        <img src="~/uploads/@cards[0].FrontPictureUrl" class="card-img">
+                        <img src="~/uploads/@cards[0].BackPictureUrl" class="card-img">
                     }
                     <div class="card-text-box">
-                        <p class="card-text">@cards[0].FrontText</p>
+                        <p class="card-text">@cards[0].BackText</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div id="container-choices" class="d-flex justify-content-center align-items-center">
-      
     </div>
     <div>
         <a id="back-to-deck" asp-action="Details" asp-route-id="@Model.Id">Back to Deck</a>
@@ -35,7 +34,7 @@
 <script id="modelData" type="application/json">
     @Html.Raw(Json.Serialize(Model.SimpleCards))
 </script>
-<script src="/js/Test.js"></script>
+<script src="/js/TestReversed.js"></script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

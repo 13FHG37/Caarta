@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<div class="my-main">
 <h1>Details</h1>
 
 <div>
@@ -49,6 +49,9 @@
     </dl>
 </div>
 <div>
+    <a href="javascript:void(0);" onclick="ChooseGamemode(@Model.Id, @Model.Cards.Count)" class="choose-gamemode">
+        Play
+    </a> |
     <a asp-controller="Cards" asp-action="Create" asp-route-id="@Model?.Id">Add Card</a> |
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
@@ -104,3 +107,4 @@
         }
     </tbody>
 </table>
+</div>

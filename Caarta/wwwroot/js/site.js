@@ -26,8 +26,12 @@ function addCard() {
     )
 }
 
-function ChooseGamemode(deckId) {
+function ChooseGamemode(deckId, n) {
     let container = document.querySelector("body");
+    let test = n >= 4
+        ? ` <button onclick="window.location.href='/Decks/Test/${deckId}'" type="button" class="btn btn-primary">Test</button>
+        <button onclick="window.location.href='/Decks/TestReversed/${deckId}'" type="button" class="btn btn-primary">Test Reversed</button>`
+        : "";
     $(container).append(
         `
         <div class="modal" id="gamemode-popup" tabindex="-1" role="dialog">
@@ -45,7 +49,7 @@ function ChooseGamemode(deckId) {
                     <div class="modal-footer d-flex justify-content-between w-100">
                         <div>
                             <button onclick="window.location.href='/Decks/CheckYourself/${deckId}'" type="button" class="btn btn-primary">Check Yourself</button>
-                            <button onclick="window.location.href='/Decks/CheckYourself/${deckId}'" type="button" class="btn btn-primary">Test</button>
+                           ${test}
                         </div>
                         <button data-bs-dismiss="modal" type="button" class="btn btn-secondary">Cancel</button>
                     </div>

@@ -341,8 +341,48 @@ namespace Caarta.Controllers
             {
                 return NotFound();
             }
+            var simpleDeck = new DeckSimpleDTO()
+            {
+                Id = deck.Id,
+                Name = deck.Name,
+                CategoryId = deck.CategoryId,
+                LanguageId = deck.LanguageId,
+                TimeOfCreation = deck.TimeOfCreation,
+                SimpleCards = deck.Cards.Select(c => new CardSimpleDTO
+                {
+                    FrontText = c.FrontText,
+                    BackText = c.BackText,
+                    FrontPictureUrl = c.FrontPictureUrl,
+                    BackPictureUrl = c.BackPictureUrl
+                }).ToList()
+            };
 
-            return View(deck);
+            return View(simpleDeck);
+        }
+        public async Task<IActionResult> TestReversed(int id)
+        {
+            var deck = await _deckService.GetByIdAsync(id);
+            if (deck == null)
+            {
+                return NotFound();
+            }
+            var simpleDeck = new DeckSimpleDTO()
+            {
+                Id = deck.Id,
+                Name = deck.Name,
+                CategoryId = deck.CategoryId,
+                LanguageId = deck.LanguageId,
+                TimeOfCreation = deck.TimeOfCreation,
+                SimpleCards = deck.Cards.Select(c => new CardSimpleDTO
+                {
+                    FrontText = c.FrontText,
+                    BackText = c.BackText,
+                    FrontPictureUrl = c.FrontPictureUrl,
+                    BackPictureUrl = c.BackPictureUrl
+                }).ToList()
+            };
+
+            return View(simpleDeck);
         }
     }
 }

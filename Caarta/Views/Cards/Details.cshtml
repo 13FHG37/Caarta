@@ -3,47 +3,31 @@
 @{
     ViewData["Title"] = "Details";
 }
+<div id="cards-container" class="d-flex justify-content-center align-items-center vh-100 flex-column">
+    <div class="card-container" onclick="flipCard(this)">
+        <div class="card-inner">
+            <div class="card-front d-flex flex-column">
+                @if (!string.IsNullOrEmpty(Model.FrontPictureUrl))
+                {
+                    <img src="~/uploads/@Model.FrontPictureUrl" class="card-img">
+                }
+                <div class="card-text-box">
+                    <p class="card-text">@Model.FrontText</p>
+                </div>
+            </div>
 
-<h1>Details</h1>
-
-<div>
-    <h4>Card</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Front Text
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FrontText)
-        </dd>
-        @if (Model.FrontPictureUrl != null)
-            {
-            <dt class="col-sm-2">
-                Front Picture
-            </dt>
-            <dd class="col-sm-10"> 
-                <img style="height:100px; width:auto" src="~/uploads/@Model.FrontPictureUrl" />
-            </dd>
-        }
-        <dt class="col-sm-2">
-            Back Text
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.BackText)
-        </dd>
-        @if (Model.BackPictureUrl != null)
-        {
-            <dt class="col-sm-2">
-                Back Picture
-            </dt>
-            <dd class="col-sm-10">
-                <img style="height:100px; width:auto" src="~/uploads/@Model.BackPictureUrl" />
-            </dd>
-        }
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
-    <a asp-controller="Decks" asp-action="Details" asp-route-id="@Model?.DeckId">Back to Deck</a>
+            <div class="card-back d-flex flex-column">
+                @if (!string.IsNullOrEmpty(Model.BackPictureUrl))
+                {
+                    <img src="~/uploads/@Model.BackPictureUrl" class="card-img">
+                }
+                <div class="card-text-box">
+                    <p class="card-text">@Model.BackText</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div >
+        <a id="back-to-deck" asp-action="Details" asp-route-id="@Model.DeckId">Back to Deck</a>
+    </div>
 </div>

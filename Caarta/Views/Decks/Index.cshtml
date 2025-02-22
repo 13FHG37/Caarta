@@ -5,7 +5,7 @@
     ViewData["Title"] = "Index";
     var currentUser = await _userManager.GetUserAsync(User);
 }
-
+<div class="my-main">
 <h1>Index</h1>
 
 <p>
@@ -62,7 +62,7 @@
                             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     } 
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                    <a href="javascript:void(0);" onclick="ChooseGamemode(@item.Id)" class="choose-gamemode">
+                    <a href="javascript:void(0);" onclick="ChooseGamemode(@item.Id, @item.Cards.Count)" class="choose-gamemode">
                         Play
                     </a>
                 </td>
@@ -70,3 +70,4 @@
         }
     </tbody>
 </table>
+</div>

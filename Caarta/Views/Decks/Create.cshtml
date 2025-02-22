@@ -4,69 +4,68 @@
     ViewData["Title"] = "Create";
     int index = 1;
 }
-<div class="my-main">
-<h1>Create</h1>
+<div class="d-flex align-items-center vh-100 flex-column" style="margin-top: 7rem">
 
-<h4>Deck</h4>
-<hr />
-<div class="row">
+    <h3>Create Deck</h3>
     <div class="col-md-4">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name">Name</label>
-                <textarea asp-for="Name" class="form-control"></textarea>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId">Category</label>
-                <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="LanguageId">Language</label>
-                <select asp-for="LanguageId" asp-items="Model.Languages" class="form-control"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="IsPublic">Visibility</label>
-                <select asp-for="IsPublic" class="form-control">
-                    <option value="true">Public</option>
-                    <option value="false">Private</option>
-                </select>
-            </div>
+                <div class="form-floating mb-3">
+    
+                    <input asp-for="Name" class="form-control">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+    
+                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
+                    <label asp-for="CategoryId" class="form-label">Category</label>
+                </div>
+                <div class="form-floating mb-3">
+    
+                    <select asp-for="LanguageId" asp-items="Model.Languages" class="form-control"></select>
+                    <label asp-for="LanguageId" class="form-label">Language</label>
+                </div>
+                <div class="form-floating mb-3">
+    
+                    <select asp-for="IsPublic" class="form-control">
+                        <option value="true">Public</option>
+                        <option value="false">Private</option>
+                    </select>
+                    <label asp-for="IsPublic" class="form-label">Visibility</label>
+                </div>
+            <input type="hidden" asp-for="CreatorId" />
+            <input type="hidden" asp-for="TimeOfCreation" />
             <div class="create-card-container">
-				<label>Cards</label>
-                <div class="form-group">
-                    <label asp-for="CreateCards[0].FrontText">Front Text</label>
-                    <textarea asp-for="CreateCards[0].FrontText" class="form-control"></textarea>
+    		    <h4>Cards</h4>
+                <div class="form-floating mb-3">
+                    <input asp-for="CreateCards[0].FrontText" class="form-control">
+                    <label class="form-label" asp-for="CreateCards[0].FrontText">Front Text</label>
                 </div>
-                <div class="form-group">
-                    <label asp-for="CreateCards[0].FrontPicture">Front Picture</label>
-                    <input accept="image/jpeg, image/png" asp-for="CreateCards[0].FrontPicture" type="file" class="form-control-file" />
+                <div class="mb-3">
+                    
+                    <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="CreateCards[0].FrontPicture" />
                 </div>
-                <div class="form-group">
-                    <label asp-for="CreateCards[0].BackText">Back Text</label>
-                    <textarea asp-for="CreateCards[0].BackText" class="form-control"></textarea>
+                <div class="form-floating mb-3">
+                    <input asp-for="CreateCards[0].BackText" class="form-control">
+                    <label class="form-label" asp-for="CreateCards[0].BackText">Back Text</label>
                 </div>
-                <div class="form-group">
-                    <label asp-for="CreateCards[0].BackPicture">Back Picture</label>
-                    <input accept="image/jpeg, image/png" asp-for="CreateCards[0].BackPicture" type="file" class="form-control-file" />
+                <div class="mb-3">
+                    
+                    <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="CreateCards[0].BackPicture" />
                 </div>
             </div>
-            <a href="javascript:void(0);" onclick="addCard()" class="add-card">
+            <a href="javascript:void(0);" onclick="addCard()" class="btn btn-secondary add-card">
                 +
             </a>
-            <input type="hidden" asp-for="CreatorId" />
+            <hr/>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="btn btn-light" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-</div>

@@ -1,110 +1,121 @@
 ﻿@model DeckDTO
+@inject UserManager<AppUser> _userManager
+@inject SignInManager<AppUser> SignInManager
 
 @{
     ViewData["Title"] = "Details";
+    var currentUser = await _userManager.GetUserAsync(User);
+    var signedIn = SignInManager.IsSignedIn(User);
 }
 <div class="my-main">
-<h1>Details</h1>
 
-<div>
-    <h4>Deck</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Creator.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Language)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Language.Name)
-        </dd>
-        <dt class="col-sm-2">
-            Visibility
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.IsPublic ? "Public" : "Private")
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TimeOfCreation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TimeOfCreation)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a href="javascript:void(0);" onclick="ChooseGamemode(@Model.Id, @Model.Cards.Count)" class="choose-gamemode">
-        Play
-    </a> |
-    <a asp-controller="Cards" asp-action="Create" asp-route-id="@Model?.Id">Add Card</a> |
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Front Text
-            </th>
-            <th>
-                Front Image
-            </th>
-            <th>
-                Back Text
-            </th>
-            <th>
-                Back Image
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Cards)
+    <div>
+        <h4>Deck</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Creator)
+            </dt>
+            <dd class = "col-sm-10">
+               <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.CreatorId">@Html.DisplayFor(model => model.Creator.UserName)</a>
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Category)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Category.Name)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Language)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Language.Name)
+            </dd>
+@*             <dt class="col-sm-2">
+                Visibility
+            </dt>
+            <dd class="col-sm-10">
+                @(Model.IsPublic ? "Public" : "Private")
+            </dd> *@
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TimeOfCreation)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TimeOfCreation)
+            </dd>
+        </dl>
+            <hr />
+    </div>
+       
+    <div>
+        <a class="btn btn-success" onclick="ChooseGamemode(@Model.Id, @Model.Cards.Count)">Play</a>
+        @if (signedIn)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FrontText)
-                </td>
-                <td>
-                    @if (item.FrontPictureUrl != null) {
-                        <img style="height:100px; width:auto" src="~/uploads/@item.FrontPictureUrl" />
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BackText)
-                </td>
-                <td>
-                    @if (item.BackPictureUrl != null)
-                    {
-                        <img style="height:100px; width:auto" src="~/uploads/@item.BackPictureUrl" />
-                    }
-                </td>
-                <td>
-                    <a asp-controller="Cards" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="Cards" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-controller="Cards" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-
+            if (!currentUser.Saved.Any(d => d.DeckId == Model.Id))
+            {
+                <a class="btn btn-primary" asp-action="Save" asp-route-id="@Model.Id">Save</a>
+            }
+            else
+            {
+                <a class="btn btn-dark" asp-action="Unsave" asp-route-id="@Model.Id">Unsave</a>
+            }
+            @if (User.IsInRole("Admin") || currentUser.Id == Model.CreatorId)
+            {
+                <a class ="btn btn-secondary" asp-controller="Cards" asp-action="Create" asp-route-id="@Model?.Id">Add Card</a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            }
         }
-    </tbody>
-</table>
+        <a class="btn btn-light" asp-action="Index">Back to List</a>
+    </div>
+        <hr />
+        <h3>Cards<hr /></h3>
+        <div class="d-flex justify-content-center align-items-center flex-wrap">
+        <hr />
+        @foreach (var card in Model.Cards)
+        {
+            <div class="d-flex justify-content-center align-items-center flex-column" style="margin-bottom: 1rem">
+                <div class="card-container-choice" onclick="flipCard(this)">
+                    <div class="card-inner">
+                        <div class="card-front d-flex flex-column">
+                            @if (!string.IsNullOrEmpty(card.FrontPictureUrl))
+                            {
+                                <img src="~/uploads/@card.FrontPictureUrl" class="card-img" loading="lazy">
+                            }
+                            <div class="card-text-box">
+                                    <p class="card-text-choice">@card.FrontText</p>
+                            </div>
+                        </div>
+    
+                        <div class="card-back d-flex flex-column">
+                            @if (!string.IsNullOrEmpty(card.BackPictureUrl))
+                            {
+                                <img src="~/uploads/@card.BackPictureUrl" class="card-img" loading="lazy">
+                            }
+                            <div class="card-text-box">
+                                    <p class="card-text-choice">@card.BackText</p>
+                            </div>
+                        </div>
+                    </div>
+                        
+                </div>
+                <div class="d-flex justify-content-center align-items-center gap-3">
+                        @if (signedIn)
+                        {
+                            @if (User.IsInRole("Admin") || currentUser.Id == Model.CreatorId)
+                            {
+                                <a class="btn btn-warning" asp-controller="Cards" asp-action="Edit" asp-route-id="@card?.Id">Edit</a>
+                                <a class="btn btn-danger" asp-controller="Cards" asp-action="Delete" asp-route-id="@card?.Id">Delete</a>
+                            }
+                        }
+                </div>
+            </div>
+        }
+    </div>
 </div>

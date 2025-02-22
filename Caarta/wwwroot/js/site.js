@@ -4,30 +4,35 @@
 
 function addCard() {
     let container = document.querySelector(".create-card-container");
-    let index = (document.querySelector(".create-card-container").children.length - 1) / 4
+    let index = (document.querySelector(".create-card-container").children.length) / 5
     $(container).append(
         `
-        <div class="form-group">
-             <label for="CreateCards_${index}__FrontText">Front Text</label>
-             <textarea id="CreateCards_${index}__FrontText" name="CreateCards[${index}].FrontText" class="form-control"></textarea>
-         </div>
-         <div class="form-group">
-             <label for="CreateCards_${index}__FrontPicture">Front Picture</label>
-             <input accept="image/jpeg, image/png" id="CreateCards_${index}__FrontPicture" name="CreateCards[${index}].FrontPicture" type="file" class="form-control-file" />
-         </div>
-         <div class="form-group">
-             <label for="CreateCards_${index}__BackText">Back Text</label>
-             <textarea id="CreateCards_${index}__BackText" name="CreateCards[${index}].BackText" class="form-control"></textarea>
-         </div>
-         <div class="form-group">
-             <label for="CreateCards_${index}__BackPicture">Back Picture</label>
-             <input accept="image/jpeg, image/png" id="CreateCards_${index}__BackPicture" name="CreateCards[${index}].BackPicture" type="file" class="form-control-file" />
-         </div>`
+        <hr/>
+        <div class="form-floating mb-3">
+            <input id="CreateCards_${index}__FrontText" name="CreateCards[${index}].FrontText" class="form-control">
+            <label class="form-label" for="CreateCards_${index}__FrontText" >Front Text</label>
+        </div>
+        <div class="mb-3">
+            <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" id="CreateCards_${index}__FrontPicture" name="CreateCards[${index}].FrontPicture" />
+        </div>
+        <div class="form-floating mb-3">
+            <input id="CreateCards_${index}__BackText" name="CreateCards[${index}].BackText" class="form-control">
+            <label class="form-label" for="CreateCards_${index}__BackText" >Front Text</label>
+        </div>
+        <div class="mb-3">
+            <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" id="CreateCards_${index}__BackPicture" name="CreateCards[${index}].FrontPicture" />
+        </div>`
     )
 }
 
 function ChooseGamemode(deckId, n) {
+    console.log(deckId, n)
     let container = document.querySelector("body");
+    let existingModal = document.getElementById("gamemode-popup");
+    if (existingModal) {
+        existingModal.remove();
+    }
+
     let test = n >= 4
         ? ` <button onclick="window.location.href='/Decks/Test/${deckId}'" type="button" class="btn btn-primary">Test</button>
         <button onclick="window.location.href='/Decks/TestReversed/${deckId}'" type="button" class="btn btn-primary">Test Reversed</button>`
@@ -39,9 +44,6 @@ function ChooseGamemode(deckId, n) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Start Game</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
                     <div class="modal-body">
                         <p>Choose gamemode:</p>

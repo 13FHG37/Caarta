@@ -1,142 +1,121 @@
 ﻿@model AppUser
+@inject UserManager<AppUser> _userManager
+@inject SignInManager<AppUser> SignInManager
 
 @{
     ViewData["Title"] = "Details";
+    var currentUser = await _userManager.GetUserAsync(User);
+    var signedIn = SignInManager.IsSignedIn(User);
 }
 <div class="my-main">
-<h1>Details</h1>
-
-<div>
-    <h4>User</h4>
+    <div class="d-flex justify-content-between align-items-center flex-column">
+        <span class="pfp"><img src="~/uploads/@Model.ProfilePictureUrl" loading="lazy" /></span>
+        <h3>@Model.UserName</h3>
+    </div>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            Profile Picture
-        </dt>
-        <dd class="col-sm-10">
-            <img style="height:100px; width:auto" src="~/uploads/@Model.ProfilePictureUrl" />
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ColorThemeId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ColorThemeId)
-        </dd>
+    <div>     
+        @if (signedIn)
+        {
+            @if (User.IsInRole("Admin") || currentUser.Id == Model.Id)
+            {
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id">Delete</a>
+            }
+        }
+    </div>
+    <hr/>
+    @if (Model.Created?.Count != 0) {
+    <h4> Created Decks</h4>
+    <div class="container mt-4">
+        <div class="row">
+            @foreach (var deck in Model.Created)
+            {
+                <div class="col-md-4 col-sm-6 mb-4" onclick="ChooseGamemode(@deck.Id, @deck.Cards.Count)">
+                    <div class="card p-3 position-relative deck-container">
+                        <div class="d-flex justify-content-between align-items-start ">
+                            <div>
+                                <h5 class="mb-1">@deck.Name</h5>
+                                <small class="text-muted">@deck.Category.Name - @deck.Language.Name</small>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" data-bs-display="static" onclick="event.stopPropagation();" type="button" id="dropdownMenuButton-@deck.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ...
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@deck.Id" onclick="event.stopPropagation();">
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@deck.Id">Details</a></li>
+                                    @if (signedIn)
+                                    {
+                                        if (!currentUser.Saved.Any(d => d.DeckId == deck.Id))
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Save" asp-route-id="@deck.Id">Save</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Unsave" asp-route-id="@deck.Id">Unsave</a></li>
+                                        }
+                                        @if (User.IsInRole("Admin") || currentUser.Id == deck.CreatorId)
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@deck.Id">Edit</a></li>
+                                            <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@deck.Id">Delete</a></li>
+                                        }
+                                    }
 
-    </dl>
-</div>
-<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-<a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-<h4> Created Decks</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Creator
-            </th>
-            <th>
-                Category
-            </th>
-            <th>
-                Language
-            </th>
-            <th>
-                Time of creation
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Created)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Creator.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Language.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfCreation)
-                </td>
-                <td>
-                    <a asp-controller="Decks" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="Decks" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-controller="Decks" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<h4>Saved Decks</h4>
-<table class="table">  
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Creator
-            </th>
-            <th>
-                Category
-            </th>
-            <th>
-                Language
-            </th>
-            <th>
-                Time of creation
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-        @foreach (var item in Model.Saved)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Deck.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Deck.Creator.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Deck.Category.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Deck.Language.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Deck.TimeOfCreation)
-                </td>
-                <td>
-                    <a asp-controller="Decks" asp-action="Unsave" asp-route-id="@item.Deck.Id">Unsave</a> |
-                    <a asp-controller="Decks" asp-action="Edit" asp-route-id="@item.Deck.Id">Edit</a> |
-                    <a asp-controller="Decks" asp-action="Details" asp-route-id="@item.Deck.Id">Details</a> |
-                    <a asp-controller="Decks" asp-action="Delete" asp-route-id="@item.Deck.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-</div>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+    }
+    @if (Model.Saved?.Count != 0) {
+    <h4>Saved Decks</h4>
+    <div class="container mt-4">
+        <div class="row">
+            @foreach (var item in Model.Saved)
+            {
+
+                var deck = item.Deck;
+
+                <div class="col-md-4 col-sm-6 mb-4" onclick="ChooseGamemode(@deck.Id, @deck.Cards.Count)">
+                    <div class="card p-3 position-relative deck-container">
+                        <div class="d-flex justify-content-between align-items-start ">
+                            <div>
+                                <h5 class="mb-1">@deck.Name</h5>
+                                <small class="text-muted">@deck.Category.Name - @deck.Language.Name</small>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" data-bs-display="static" onclick="event.stopPropagation();" type="button" id="dropdownMenuButton-@deck.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ...
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@deck.Id" onclick="event.stopPropagation();">
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@deck.Id">Details</a></li>
+                                    @if (signedIn)
+                                    {
+                                        if (!currentUser.Saved.Any(d => d.DeckId == deck.Id))
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Save" asp-route-id="@deck.Id">Save</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Unsave" asp-route-id="@deck.Id">Unsave</a></li>
+                                        }
+                                        @if (User.IsInRole("Admin") || currentUser.Id == deck.CreatorId)
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@deck.Id">Edit</a></li>
+                                            <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@deck.Id">Delete</a></li>
+                                        }
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+    }

@@ -27,10 +27,65 @@ header {
     width: 100%;
 }
 
+#logo {
+    width: 3rem;
+    height: 3rem;
+}
+
+.dropdown-menu {
+    z-index: 1050 !important; /* Higher than cards */
+    position: absolute !important; /* Ensures it's not affected by parent’s position */
+}
+
+.pfp {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 10rem;
+    height: 10rem;
+}
+
+.pfp-small {
+    width: 40px;
+    height: 40px;
+}
+
+.pfp img {
+    position: absolute;
+    height: 100%;
+    top: 0;
+}
+
+
 /* ----------------------------------------------------- */
 
 .my-main {
-    margin-top: 4rem;
+    margin-top: 5rem;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding-bottom: 3rem;
+}
+
+.my-main {
+}
+
+.deck-container {
+    background-color: white;
+    transition: all 200ms;
+}
+
+.deck-container:hover {
+    background-color: #cccccc;
+    transition: all 200ms;
+}
+
+.card-container-choice:active {
+    background-color: #cccccc;
+    transition: all 200ms;
 }
 
 .card-container {
@@ -97,6 +152,10 @@ header {
     transform: rotateY(180deg);
 }
 
+.card-container-choice.clicked .card-inner {
+    transform: rotateY(180deg);
+}
+
 .card-img {
     max-width: 100%;
     max-height: 60%;
@@ -158,3 +217,4 @@ header {
     width: 100%;
     height: auto
 }
+

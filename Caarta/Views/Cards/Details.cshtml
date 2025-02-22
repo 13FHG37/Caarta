@@ -9,7 +9,7 @@
             <div class="card-front d-flex flex-column">
                 @if (!string.IsNullOrEmpty(Model.FrontPictureUrl))
                 {
-                    <img src="~/uploads/@Model.FrontPictureUrl" class="card-img">
+                    <img src="~/uploads/@Model.FrontPictureUrl" class="card-img" loading="lazy">
                 }
                 <div class="card-text-box">
                     <p class="card-text">@Model.FrontText</p>
@@ -19,7 +19,7 @@
             <div class="card-back d-flex flex-column">
                 @if (!string.IsNullOrEmpty(Model.BackPictureUrl))
                 {
-                    <img src="~/uploads/@Model.BackPictureUrl" class="card-img">
+                    <img src="~/uploads/@Model.BackPictureUrl" class="card-img" loading="lazy">
                 }
                 <div class="card-text-box">
                     <p class="card-text">@Model.BackText</p>
@@ -28,6 +28,6 @@
         </div>
     </div>
     <div >
-        <a id="back-to-deck" asp-action="Details" asp-route-id="@Model.DeckId">Back to Deck</a>
+        <a class="btn btn-light" id="back-to-deck" asp-action="Details" asp-route-id="@Model.DeckId">Back to Deck</a>
     </div>
 </div>

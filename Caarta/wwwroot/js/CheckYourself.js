@@ -16,11 +16,11 @@ function PressKnow(doKnow) {
     if (index < n) {
         let card = cards[index];
         let frontImage = card.frontPictureUrl
-            ? `<img src="/uploads/${card.frontPictureUrl}" class="card-img">`
+            ? `<img src="/uploads/${card.frontPictureUrl}" class="card-img" loading="lazy" >`
             : "";
 
         let backImage = card.backPictureUrl
-            ? `<img src="/uploads/${card.backPictureUrl}" class="card-img">`
+            ? `<img src="/uploads/${card.backPictureUrl}" class="card-img" loading="lazy">`
             : "";
 
         container.innerHTML = `
@@ -49,7 +49,7 @@ function PressKnow(doKnow) {
         container2.innerHTML = `
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <h1 class>${know}/${n}</h1>
-                <a id="back-to-deck" href="${back}">Back to Deck</a>
+                <a class="btn btn-light" id="back-to-deck" href="${back}">Back to Deck</a>
             </div>
         `;
     };

@@ -3,11 +3,10 @@
 @{
     ViewData["Title"] = "Register";
 }
-<div class="my-main">
-<div class="form-container-content">
-    <div class="form-title">Registration</div>
-    <hr />
-    <div class="row">
+<div class="d-flex align-items-center vh-100 flex-column" style="margin-top: 7rem">
+
+    <h3>Register</h3>
+    <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
@@ -58,7 +57,6 @@
             }
         </section>
     </div>
-</div>
 </div>
 
 @section Scripts {

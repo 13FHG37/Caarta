@@ -1,4 +1,5 @@
 using Caarta.Models;
+using Caarta.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,15 +8,17 @@ namespace Caarta.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IDeckService _deckService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IDeckService deckService)
         {
             _logger = logger;
+            _deckService = deckService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _deckService.GetAllAsync());
         }
 
         public IActionResult Privacy()

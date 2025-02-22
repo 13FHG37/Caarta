@@ -20,7 +20,7 @@ function PressKnow(i) {
     if (index < n) {
         let card = cards[index];
         let backImage = card.backPictureUrl
-            ? `<img src="/uploads/${card.backPictureUrl}" class="card-img">`
+            ? `<img src="/uploads/${card.backPictureUrl}" class="card-img" loading="lazy">`
             : "";
 
         container.innerHTML = `
@@ -44,7 +44,7 @@ function PressKnow(i) {
         container2.innerHTML = `
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <h1 class>${know}/${n}</h1>
-                <a id="back-to-deck" href="${back}">Back to Deck</a>
+                <a class="btn btn-light" id="back-to-deck" href="${back}">Back to Deck</a>
             </div>
         `;
     };
@@ -55,13 +55,13 @@ function StartRound(realNumber) {
     usedNumbers.push(realNumber)
     let when = Math.floor(Math.random() * 4);
     for (let i = 0; i < 4; i++) {
-        let number = Math.floor(Math.random() * n);
-        while (usedNumbers.includes(number)) {
-            number = Math.floor(Math.random() * n);
-        }
         if (when == i) {
             createChoice(realNumber);
         } else {
+            let number = Math.floor(Math.random() * n);
+            while (usedNumbers.includes(number)) {
+                number = Math.floor(Math.random() * n);
+            }
             usedNumbers.push(number);
             createChoice(number);
         }
@@ -71,7 +71,7 @@ function StartRound(realNumber) {
 
 function createChoice(i) {
     let picture = cards[i].frontPictureUrl
-        ? `<img src="/uploads/${cards[i].frontPictureUrl}" class="card-img">`
+        ? `<img src="/uploads/${cards[i].frontPictureUrl}" class="card-img" loading="lazy">`
         : "";
     choices.innerHTML += `
     <div class="card-container-choice" onclick="PressKnow(${cards[i].$id})">

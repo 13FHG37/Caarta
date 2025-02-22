@@ -6,16 +6,16 @@
 }
 
 <div id="cards-container" class="d-flex justify-content-center align-items-center vh-100 flex-column">
-    <div id="cards-counter">
+    <h4 id="cards-counter">
         1/@cards.Count
-    </div>
+    </h4>
     <div class="d-flex justify-content-center align-items-center">
         <div class="card-container">
             <div class="card-inner">
                 <div class="card-front d-flex flex-column">
                     @if (!string.IsNullOrEmpty(cards[0].FrontPictureUrl))
                     {
-                        <img src="~/uploads/@cards[0].FrontPictureUrl" class="card-img">
+                        <img src="~/uploads/@cards[0].FrontPictureUrl" class="card-img" loading="lazy">
                     }
                     <div class="card-text-box">
                         <p class="card-text">@cards[0].FrontText</p>
@@ -28,7 +28,7 @@
       
     </div>
     <div>
-        <a id="back-to-deck" asp-action="Details" asp-route-id="@Model.Id">Back to Deck</a>
+        <a class="btn btn-light" id="back-to-deck" asp-action="Details" asp-route-id="@Model.Id">Back to Deck</a>
     </div>
 </div>
 

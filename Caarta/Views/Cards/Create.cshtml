@@ -3,44 +3,35 @@
 @{
     ViewData["Title"] = "Create";
 }
-<div class="my-main">
-<h1>Create</h1>
+<div class="d-flex justify-content-center align-items-center vh-100 flex-column">
 
-<h4>Card</h4>
-<hr />
-<div class="row">
+    <h3>Add Card</h3>
     <div class="col-md-4">
         <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FrontText">Front Text</label>
-                <textarea asp-for="FrontText" class="form-control"></textarea>
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.FrontText" class="form-control">
+                <label class="form-label" asp-for="@Model.FrontText">Front Text</label>
             </div>
-            <div class="form-group">
-                <label asp-for="FrontPicture">Front Picture</label>
-                <input type="file" accept="image/jpeg, image/png" asp-for="FrontPicture" type="file" class="form-control-file" />
+            <div class="mb-3">
+
+                <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="@Model.FrontPicture" />
             </div>
-            <div class="form-group">
-                <label asp-for="BackText">Back Text</label>
-                <textarea asp-for="BackText" class="form-control"></textarea>
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.BackText" class="form-control">
+                <label class="form-label" asp-for="@Model.BackText">Back Text</label>
             </div>
-            <div class="form-group">
-                <label asp-for="BackPicture">Back Picture</label>
-                <input type="file" accept="image/jpeg, image/png" asp-for="BackPicture" type="file" class="form-control-file" />
+            <div class="mb-3">
+
+                <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="@Model.BackPicture" />
             </div>
             <input type="hidden" asp-for="DeckId" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="btn btn-light" asp-controller="Decks" asp-action="Details" asp-route-id="@Model.DeckId">Back to Deck</a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-</div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

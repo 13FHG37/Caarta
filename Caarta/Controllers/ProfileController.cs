@@ -70,7 +70,8 @@ namespace Caarta.Controllers
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                ColorThemeId = user.ColorThemeId
+                ColorThemeId = user.ColorThemeId,
+                ProfilePictureUrl = user.ProfilePictureUrl
             };
 
             return View(createUser);
@@ -102,6 +103,7 @@ namespace Caarta.Controllers
                 }
                 try
                 {
+                    user.ProfilePictureUrl = model.ProfilePictureUrl;
                     if (model.ProfilePicture != null && model.ProfilePicture.Length > 0)
                     {
                         var newFileName = await FileUpload.UploadAsync(model.ProfilePicture, _environment.WebRootPath);

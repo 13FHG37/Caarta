@@ -1,73 +1,57 @@
 ﻿@model IEnumerable<DeckDTO>
 @inject UserManager<AppUser> _userManager
+@inject SignInManager<AppUser> SignInManager
 
 @{
     ViewData["Title"] = "Index";
     var currentUser = await _userManager.GetUserAsync(User);
+    var signedIn = SignInManager.IsSignedIn(User);
 }
 <div class="my-main">
-<h1>Index</h1>
+    <p>
+        <a class="btn btn-secondary" asp-controller="Decks" asp-action="Create">Add Deck</a>
+    </p>
+    <div class="container mt-4">
+        <div class="row">
+            @foreach (var deck in Model)
+            {
+                <div class="col-md-4 col-sm-6 mb-4" onclick="ChooseGamemode(@deck.Id, @deck.Cards.Count)">
+                    <div class="card p-3 position-relative deck-container">
+                        <div class="d-flex justify-content-between align-items-start ">
+                            <div>
+                                <h5 class="mb-1">@deck.Name</h5>
+                                <small class="text-muted">@deck.Category.Name - @deck.Language.Name</small>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" data-bs-display="static" onclick="event.stopPropagation();" type="button" id="dropdownMenuButton-@deck.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ...
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@deck.Id" onclick="event.stopPropagation();">
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@deck.Id">Details</a></li>
+                                    @if (signedIn) {
+                                        if (!currentUser.Saved.Any(d => d.DeckId == deck.Id))
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Save" asp-route-id="@deck.Id">Save</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Unsave" asp-route-id="@deck.Id">Unsave</a></li>
+                                        }
+                                        @if (User.IsInRole("Admin") || currentUser.Id == deck.CreatorId)
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@deck.Id">Edit</a></li>
+                                            <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@deck.Id">Delete</a></li>
+                                        }
+                                    }
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                      
+                </div>
+            }
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Creator)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Language)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeOfCreation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Creator.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Language.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfCreation)
-                </td>
-                <td>
-                    @if (currentUser != null) {
-                        if (currentUser.Saved.Any(i => i.DeckId == item.Id)) {
-                            <a asp-action="Unsave" asp-route-id="@item.Id">Unsave</a>
-                        }
-                        else {
-                            <a asp-action="Save" asp-route-id="@item.Id">Save</a>
-                        }
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    } 
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                    <a href="javascript:void(0);" onclick="ChooseGamemode(@item.Id, @item.Cards.Count)" class="choose-gamemode">
-                        Play
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 </div>

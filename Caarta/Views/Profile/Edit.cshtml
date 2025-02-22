@@ -3,45 +3,37 @@
 @{
     ViewData["Title"] = "Edit";
 }
-<div class="my-main">
-<h1>Edit</h1>
+<div class="d-flex justify-content-center align-items-center vh-100 flex-column">
 
-<h4>User</h4>
-<hr />
-<div class="row">
+    <h3>Edit Card</h3>
     <div class="col-md-4">
         <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName">Username</label>
-                <input pattern=".{5,}" required title="5 characters minimum" asp-for="UserName" m class="form-control"></input>
+            <div class="form-floating mb-3">
+                <input pattern=".{5,}" required title="5 characters minimum" asp-for="UserName" class="form-control">
+                <label class="form-label" asp-for="UserName">UserName</label>
             </div>
-            <div class="form-group">
-                <label asp-for="Email">Email</label>
-                <input type="email" asp-for="Email" class="form-control"></input>
+            <div class="form-floating mb-3">
+                <input type="email" asp-for="Email" class="form-control">
+                <label class="form-label" asp-for="Email">Email</label>
             </div>
-            <div class="form-group">
-                <label asp-for="ProfilePicture">Profile Picture</label>
-                <input type="file" accept="image/jpeg, image/png" asp-for="ProfilePicture"  class="form-control-file" />
+            <div class="mb-3">
+                <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="ProfilePicture" />
             </div>
-            <div class="form-group">
-                <label asp-for="ColorThemeId" class="control-label"></label>
-                <select asp-for="ColorThemeId" class="form-control">
+            <div class="form-floating mb-3">
+                <select class="form-control" asp-for="ColorThemeId" class="form-control">
                     <option value="1">Light Theme</option>
                     <option value="2">Crimson Theme</option>
                     <option value="3">Dark Theme</option>
-                </select>
+				</select>
+                <label class="form-label" asp-for="ColorThemeId" class="control-label"></label>
             </div>
+            <input type="hidden" asp-for="ProfilePictureUrl" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Edit" class="btn btn-primary" />
+                <a class="btn btn-light" asp-controller="Profile" asp-action="Details" asp-route-id="@Model.Id">Back to Profile</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 </div>
 @section Scripts {
     @{

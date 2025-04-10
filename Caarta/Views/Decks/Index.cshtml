@@ -42,6 +42,15 @@
                                             <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@deck.Id">Edit</a></li>
                                             <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@deck.Id">Delete</a></li>
                                         }
+                                        foreach (var cardlist in currentUser.CreatedCardlists) {
+                                            if (!cardlist.Decks.Any(d => d.DeckId == deck.Id)) {
+                                                <li>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="AddToCardlist(@deck.Id, @cardlist.Id)">
+                                                        Add to @cardlist.Name
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
                                     }
                                    
                                 </ul>

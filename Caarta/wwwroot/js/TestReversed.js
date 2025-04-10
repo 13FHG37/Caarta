@@ -14,8 +14,15 @@ let usedNumbers = [];
 
 StartRound(index);
 
-function PressKnow(i) {
-    know += cards[index].$id == i;
+async function PressKnow(i, element) {
+    if (cards[index].frontText == i) {
+        know++;
+        $(element).find('.card-front').css('background-color', '#19e372');
+    }
+    else {
+        $(element).find('.card-front').css('background-color', '#e74930');
+    }
+    await new Promise(resolve => setTimeout(resolve, 300));
     index++;
     if (index < n) {
         let card = cards[index];
@@ -74,7 +81,7 @@ function createChoice(i) {
         ? `<img src="/uploads/${cards[i].frontPictureUrl}" class="card-img" loading="lazy">`
         : "";
     choices.innerHTML += `
-    <div class="card-container-choice" onclick="PressKnow(${cards[i].$id})">
+    <div class="card-container-choice" onclick="PressKnow('${cards[i].frontText}', this)">
         <div class="card-inner">
             <div class="card-front d-flex flex-column">
                 ${picture}

@@ -1,0 +1,45 @@
+﻿@model CreateCardlistDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="d-flex justify-content-center align-items-center vh-100 flex-column">
+
+    <h3>Edit Cardlist</h3>
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating mb-3">
+
+                <input asp-for="Name" class="form-control"></input>
+                <label asp-for="Name" class="form-label">Name</label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+
+                <select asp-for="LanguageId" asp-items="Model.Languages" class="form-control"></select>
+                <label asp-for="LanguageId" class="form-label">Language</label>
+            </div>
+            <div class="form-floating mb-3">
+
+                <select asp-for="IsPublic" class="form-control">
+                    <option value="true">Public</option>
+                    <option value="false">Private</option>
+                </select>
+                <label asp-for="IsPublic" class="form-label">Visibility</label>
+            </div>
+            <input type="hidden" asp-for="CreatorId" />
+            <input type="hidden" asp-for="TimeOfCreation" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-light" asp-action="Index">Back to List</a>
+            </div>
+        </form>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</div>

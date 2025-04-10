@@ -32,10 +32,13 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IDeckRepository, DeckRepository>();
+builder.Services.AddScoped<ICardlistRepository, CardlistRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
 builder.Services.AddScoped<IUserSaveDeckRepository, UserSaveDeckRepository>();
+builder.Services.AddScoped<IDeckInCardlistRepository, DeckInCardlistRepository>();
 builder.Services.AddScoped<IDeckService, DeckService>();
+builder.Services.AddScoped<ICardlistService, CardlistService>();
 builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
@@ -61,6 +64,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

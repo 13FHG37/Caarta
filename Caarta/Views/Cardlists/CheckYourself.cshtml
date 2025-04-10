@@ -1,0 +1,57 @@
+﻿@model CardlistSimpleDTO
+
+@{
+    ViewData["Title"] = "Check Yourself";
+    var cards = Model.SimpleCards;
+}
+
+<div id="cards-container" class="d-flex justify-content-center align-items-center vh-100 flex-column">
+    <h4 id="cards-counter">
+        1/@cards.Count
+    </h4>
+    <div class="d-flex justify-content-center align-items-center">
+        <button class="know-button" onclick="PressKnow(false)">
+            <img src="~/img/NO.png" />
+        </button>
+        <div class="card-container" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front d-flex flex-column">
+                    @if (!string.IsNullOrEmpty(cards[0].FrontPictureUrl))
+                    {
+                        <img src="~/uploads/@cards[0].FrontPictureUrl" class="card-img" loading="lazy">
+                    }
+                    <div class="card-text-box">
+                        <p class="card-text">@cards[0].FrontText</p>
+                    </div>
+                </div>
+
+                <div class="card-back d-flex flex-column">
+                    @if (!string.IsNullOrEmpty(cards[0].BackPictureUrl))
+                    {
+                        <img src="~/uploads/@cards[0].BackPictureUrl" class="card-img" loading="lazy">
+                    }
+                    <div class="card-text-box">
+                        <p class="card-text">@cards[0].BackText</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="know-button" onclick="PressKnow(true)">
+            <img src="~/img/YES.png" />
+        </button>
+    </div>
+    <div>
+        <a class="btn btn-light" id="back-to-deck" asp-action="Details" asp-route-id="@Model.Id">Back to Cardlist</a>
+    </div>
+</div>
+
+<script id="modelData" type="application/json">
+    @Html.Raw(Json.Serialize(Model.SimpleCards))
+</script>
+<script src="~/js/CheckYourself.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

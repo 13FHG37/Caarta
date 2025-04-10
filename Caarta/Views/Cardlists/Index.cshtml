@@ -1,0 +1,50 @@
+﻿@model IEnumerable<CardlistDTO>
+@inject UserManager<AppUser> _userManager
+@inject SignInManager<AppUser> SignInManager
+
+@{
+    ViewData["Title"] = "Index";
+    var currentUser = await _userManager.GetUserAsync(User);
+    var signedIn = SignInManager.IsSignedIn(User);
+}
+<div class="my-main">
+    <p>
+        <a class="btn btn-secondary" asp-controller="Cardlists" asp-action="Create">Add Cardlist</a>
+    </p>
+    <div class="container mt-4">
+        <div class="row">
+            @foreach (var cardlist in Model)
+            {
+                <div class="col-md-4 col-sm-6 mb-4" onclick="ChooseGamemode2(@cardlist.Id, @cardlist.Decks.Count)">
+                    <div class="card p-3 position-relative cardlist-container">
+                        <div class="d-flex justify-content-between align-items-start ">
+                            <div>
+                                <h5 class="mb-1">@cardlist.Name</h5>
+                                <small class="text-muted">@cardlist.Language.Name</small>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" data-bs-display="static" onclick="event.stopPropagation();" type="button" id="dropdownMenuButton-@cardlist.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ...
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@cardlist.Id" onclick="event.stopPropagation();">
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@cardlist.Id">Details</a></li>
+                                    @if (signedIn)
+                                    {
+                                        @if (User.IsInRole("Admin") || currentUser.Id == cardlist.CreatorId)
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@cardlist.Id">Edit</a></li>
+                                            <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@cardlist.Id">Delete</a></li>
+                                        }
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

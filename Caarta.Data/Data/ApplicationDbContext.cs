@@ -29,12 +29,29 @@ namespace Caarta.Data
                 .WithMany(d => d.SavedBy)
                 .HasForeignKey(s => s.DeckId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<DeckInCardlist>()
+                .HasKey(s => new { s.DeckId, s.CardlistId });
+
+            builder.Entity<DeckInCardlist>()
+                .HasOne(s => s.Cardlist)
+                .WithMany(c => c.Decks)
+                .HasForeignKey(s => s.CardlistId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<DeckInCardlist>()
+                .HasOne(s => s.Deck)
+                .WithMany(d => d.Cardlists)
+                .HasForeignKey(s => s.DeckId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Deck> Decks { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<UserSaveDeck> UserSaveDeck { get; set; }
+        public DbSet<DeckInCardlist> DeckInCardlist { get; set; }
+        public DbSet<Cardlist> Cardlists { get; set; }
     }
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {

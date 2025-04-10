@@ -119,11 +119,12 @@ namespace Caarta.Controllers
                         FrontText = c.FrontText,
                         BackText = c.BackText,
                         FrontPictureUrl = c.FrontPictureUrl,
-                        BackPictureUrl = c.BackPictureUrl
+                        BackPictureUrl = c.BackPictureUrl,
+                        CardType = c.CardType
                     }).ToList()
                 };
                 await _deckService.CreateAsync(deck);
-
+       
                 return RedirectToAction(nameof(Index));
             }
             Console.WriteLine("-------------------------------------------------");
@@ -323,7 +324,9 @@ namespace Caarta.Controllers
                 CategoryId = deck.CategoryId,
                 LanguageId = deck.LanguageId,
                 TimeOfCreation = deck.TimeOfCreation,
-                SimpleCards = deck.Cards.Select(c => new CardSimpleDTO
+                SimpleCards = deck.Cards
+                    .OrderBy(c => Guid.NewGuid())
+                    .Select(c => new CardSimpleDTO
                 {
                     FrontText = c.FrontText,
                     BackText = c.BackText,
@@ -348,7 +351,9 @@ namespace Caarta.Controllers
                 CategoryId = deck.CategoryId,
                 LanguageId = deck.LanguageId,
                 TimeOfCreation = deck.TimeOfCreation,
-                SimpleCards = deck.Cards.Select(c => new CardSimpleDTO
+                SimpleCards = deck.Cards
+                    .OrderBy(c => Guid.NewGuid())
+                    .Select(c => new CardSimpleDTO
                 {
                     FrontText = c.FrontText,
                     BackText = c.BackText,
@@ -373,7 +378,9 @@ namespace Caarta.Controllers
                 CategoryId = deck.CategoryId,
                 LanguageId = deck.LanguageId,
                 TimeOfCreation = deck.TimeOfCreation,
-                SimpleCards = deck.Cards.Select(c => new CardSimpleDTO
+                SimpleCards = deck.Cards
+                    .OrderBy(c => Guid.NewGuid())
+                    .Select(c => new CardSimpleDTO
                 {
                     FrontText = c.FrontText,
                     BackText = c.BackText,
@@ -383,6 +390,29 @@ namespace Caarta.Controllers
             };
 
             return View(simpleDeck);
+        }
+
+        [Authorize]
+        [Route("Decks/AddToCardlist/{deckId}/{cardlistId}")]
+        public async Task<IActionResult> AddToCardlist(int deckId, int cardlistId)
+        {
+            var deck = await _deckService.GetByIdAsync(deckId);
+            if (deck == null)
+            {
+                return NotFound();
+            }
+            if (deck.Cardlists.Any(c => c.CardlistId == cardlistId))
+            {
+                return NotFound();
+            }
+            var deckInCardlist = new DeckInCardlistDTO()
+            {
+                DeckId = deck.Id,
+                CardlistId = cardlistId
+            };
+            await _deckService.AddToCardlist(deckInCardlist);
+
+            return View();
         }
     }
 }

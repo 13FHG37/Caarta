@@ -1,0 +1,111 @@
+﻿@model CardlistDTO
+@inject UserManager<AppUser> _userManager
+@inject SignInManager<AppUser> SignInManager
+
+@{
+    ViewData["Title"] = "Details";
+    var currentUser = await _userManager.GetUserAsync(User);
+    var signedIn = SignInManager.IsSignedIn(User);
+}
+<div class="my-main">
+
+    <div>
+        <h4>Cardlist</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Creator)
+            </dt>
+            <dd class="col-sm-10">
+                <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.CreatorId">@Html.DisplayFor(model => model.Creator.UserName)</a>
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Language)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Language.Name)
+            </dd>
+            @*             <dt class="col-sm-2">
+                Visibility
+            </dt>
+            <dd class="col-sm-10">
+                @(Model.IsPublic ? "Public" : "Private")
+            </dd> *@
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TimeOfCreation)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TimeOfCreation)
+            </dd>
+        </dl>
+        <hr />
+    </div>
+
+    <div>
+        <a class="btn btn-success" onclick="ChooseGamemode2(@Model.Id, @Model.Decks.Count)">Play</a>
+        @if (signedIn)
+        {
+            @if (User.IsInRole("Admin") || currentUser.Id == Model.CreatorId)
+            {
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            }
+        }
+        <a class="btn btn-light" asp-action="Index">Back to List</a>
+    </div>
+    <hr />
+    <h3>Decks<hr /></h3>
+    <div class="container mt-4">
+        <div class="row">
+        @foreach (var item in Model.Decks)
+        {
+            var deck = item.Deck;
+            <div class="col-md-4 col-sm-6 mb-4" onclick="ChooseGamemode(@deck.Id, @deck.Cards.Count)">
+                <div class="card p-3 position-relative deck-container">
+                    <div class="d-flex justify-content-between align-items-start ">
+                        <div>
+                            <h5 class="mb-1">@deck.Name</h5>
+                            <small class="text-muted">@deck.Category.Name - @deck.Language.Name</small>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light dropdown-toggle" data-bs-display="static" onclick="event.stopPropagation();" type="button" id="dropdownMenuButton-@deck.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                ...
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@deck.Id" onclick="event.stopPropagation();">
+                                    <li><a class="dropdown-item" asp-controller="Decks" asp-action="Details" asp-route-id="@deck.Id">Details</a></li>
+                                @if (signedIn)
+                                {
+                                    if (!currentUser.Saved.Any(d => d.DeckId == deck.Id))
+                                    {
+                                            <li><a class="dropdown-item" asp-controller="Decks" asp-action="Save" asp-route-id="@deck.Id">Save</a></li>
+                                    }
+                                    else
+                                    {
+                                            <li><a class="dropdown-item" asp-controller="Decks" asp-action="Unsave" asp-route-id="@deck.Id">Unsave</a></li>
+                                    }
+                                    @if (User.IsInRole("Admin") || currentUser.Id == deck.CreatorId)
+                                    {
+                                            <li><a class="dropdown-item" asp-controller="Decks" asp-action="Edit" asp-route-id="@deck.Id">Edit</a></li>
+                                            <li><a class="dropdown-item text-danger" asp-controller="Decks" asp-action="Delete" asp-route-id="@deck.Id">Delete</a></li>
+                                    }
+                                    if (Model.CreatorId == currentUser.Id) {
+                                            <li><a class="dropdown-item" asp-controller="Decks" asp-action="Edit" asp-route-id="@deck.Id">Delete from this cardlist</a></li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+        </div>
+    </div>
+</div>

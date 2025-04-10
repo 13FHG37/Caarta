@@ -42,8 +42,7 @@
                     <input asp-for="CreateCards[0].FrontText" class="form-control">
                     <label class="form-label" asp-for="CreateCards[0].FrontText">Front Text</label>
                 </div>
-                <div class="mb-3">
-                    
+                <div class="mb-3">  
                     <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="CreateCards[0].FrontPicture" />
                 </div>
                 <div class="form-floating mb-3">
@@ -51,8 +50,21 @@
                     <label class="form-label" asp-for="CreateCards[0].BackText">Back Text</label>
                 </div>
                 <div class="mb-3">
-                    
                     <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="CreateCards[0].BackPicture" />
+                </div>
+                <div class="form-floating mb-3">
+                    <select asp-for="CreateCards[0].CardType" class="form-control">
+                        <option value="0" selected="selected">None</option>
+                        <option value="1">Noun</option>
+                        <option value="2">Verb</option>
+                        <option value="3">Adjective</option>
+                        <option value="4">Adverb</option>
+                        <option value="5">Conjunction</option>
+                        <option value="6">Phrase</option>
+                        <option value="7">Preposition</option>
+                        <option value="8">Other</option>
+                    </select>
+                    <label asp-for="CreateCards[0].CardType" class="form-label">Type (optional)</label>
                 </div>
             </div>
             <a href="javascript:void(0);" onclick="addCard()" class="btn btn-secondary add-card">

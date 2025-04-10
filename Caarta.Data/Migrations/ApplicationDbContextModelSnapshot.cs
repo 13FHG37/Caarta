@@ -36,6 +36,9 @@ namespace Caarta.Data.Migrations
                     b.Property<string>("BackText")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte?>("CardType")
+                        .HasColumnType("tinyint");
+
                     b.Property<int>("DeckId")
                         .HasColumnType("int");
 
@@ -50,6 +53,40 @@ namespace Caarta.Data.Migrations
                     b.HasIndex("DeckId");
 
                     b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("Caarta.Data.Entities.Cardlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeOfCreation")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LanguageId");
+
+                    b.ToTable("Cardlists");
                 });
 
             modelBuilder.Entity("Caarta.Data.Entities.Category", b =>
@@ -106,6 +143,21 @@ namespace Caarta.Data.Migrations
                     b.HasIndex("LanguageId");
 
                     b.ToTable("Decks");
+                });
+
+            modelBuilder.Entity("Caarta.Data.Entities.DeckInCardlist", b =>
+                {
+                    b.Property<int>("DeckId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CardlistId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DeckId", "CardlistId");
+
+                    b.HasIndex("CardlistId");
+
+                    b.ToTable("DeckInCardlist");
                 });
 
             modelBuilder.Entity("Caarta.Data.Entities.Language", b =>
@@ -374,6 +426,25 @@ namespace Caarta.Data.Migrations
                     b.Navigation("Deck");
                 });
 
+            modelBuilder.Entity("Caarta.Data.Entities.Cardlist", b =>
+                {
+                    b.HasOne("Caarta.Data.Entities.AppUser", "Creator")
+                        .WithMany("CreatedCardlists")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Caarta.Data.Entities.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Language");
+                });
+
             modelBuilder.Entity("Caarta.Data.Entities.Deck", b =>
                 {
                     b.HasOne("Caarta.Data.Entities.Category", "Category")
@@ -399,6 +470,25 @@ namespace Caarta.Data.Migrations
                     b.Navigation("Creator");
 
                     b.Navigation("Language");
+                });
+
+            modelBuilder.Entity("Caarta.Data.Entities.DeckInCardlist", b =>
+                {
+                    b.HasOne("Caarta.Data.Entities.Cardlist", "Cardlist")
+                        .WithMany("Decks")
+                        .HasForeignKey("CardlistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Caarta.Data.Entities.Deck", "Deck")
+                        .WithMany("Cardlists")
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cardlist");
+
+                    b.Navigation("Deck");
                 });
 
             modelBuilder.Entity("Caarta.Data.Entities.UserSaveDeck", b =>
@@ -471,6 +561,11 @@ namespace Caarta.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Caarta.Data.Entities.Cardlist", b =>
+                {
+                    b.Navigation("Decks");
+                });
+
             modelBuilder.Entity("Caarta.Data.Entities.Category", b =>
                 {
                     b.Navigation("Decks");
@@ -478,6 +573,8 @@ namespace Caarta.Data.Migrations
 
             modelBuilder.Entity("Caarta.Data.Entities.Deck", b =>
                 {
+                    b.Navigation("Cardlists");
+
                     b.Navigation("Cards");
 
                     b.Navigation("SavedBy");
@@ -491,6 +588,8 @@ namespace Caarta.Data.Migrations
             modelBuilder.Entity("Caarta.Data.Entities.AppUser", b =>
                 {
                     b.Navigation("Created");
+
+                    b.Navigation("CreatedCardlists");
 
                     b.Navigation("Saved");
                 });

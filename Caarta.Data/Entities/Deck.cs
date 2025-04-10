@@ -11,11 +11,11 @@ namespace Caarta.Data.Entities
         }
 
         public string Name { get; set; }
-
         public string CreatorId { get; set; }
         public virtual AppUser? Creator { get; set; }
         public virtual ICollection<Card>? Cards { get; set; }
         public virtual ICollection<UserSaveDeck>? SavedBy { get; set; }
+        public virtual ICollection<DeckInCardlist>? Cardlists { get; set; }
         public int CategoryId { get; set; }
         public virtual Category? Category { get; set; }
         public int LanguageId { get; set; }

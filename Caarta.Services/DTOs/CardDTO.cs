@@ -11,5 +11,6 @@ namespace Caarta.Services.DTOs
         public string? FrontPictureUrl { get; set; }
         public string? BackText { get; set; }
         public string? BackPictureUrl { get; set; }
+        public byte? CardType { get; set; }
     }
 }

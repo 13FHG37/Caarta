@@ -102,7 +102,8 @@ namespace Caarta.Controllers
                     FrontText = model.FrontText,
                     BackText = model.BackText,
                     FrontPictureUrl = model.FrontPictureUrl,
-                    BackPictureUrl = model.BackPictureUrl
+                    BackPictureUrl = model.BackPictureUrl,
+                    CardType = model.CardType
                 };
                 await _cardService.CreateAsync(card);
 
@@ -145,6 +146,7 @@ namespace Caarta.Controllers
                 BackText = card.BackText,
                 FrontPictureUrl = card.FrontPictureUrl,
                 BackPictureUrl = card.BackPictureUrl,
+                CardType = card.CardType
             };
 
             return View(createCard);

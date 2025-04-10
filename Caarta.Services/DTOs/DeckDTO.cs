@@ -9,7 +9,9 @@ namespace Caarta.Services.DTOs
         public string CreatorId { get; set; }
         public virtual AppUser? Creator { get; set; }
         public virtual ICollection<CardDTO>? Cards { get; set; }
-        public virtual ICollection<UserSaveDeck>? SavedBy { get; set; }
+        public virtual ICollection<UserSaveDeckDTO>? SavedBy { get; set; }
+
+        public virtual ICollection<DeckInCardlistDTO>? Cardlists { get; set; }
         public int CategoryId { get; set; }
         public virtual CategoryDTO? Category { get; set; }
         public int LanguageId { get; set; }

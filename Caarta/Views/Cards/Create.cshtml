@@ -24,6 +24,20 @@
 
                 <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" asp-for="@Model.BackPicture" />
             </div>
+            <div class="form-floating mb-3">
+                <select asp-for="@Model.CardType" class="form-control">
+                    <option value="0" selected="selected">None</option>
+                    <option value="1">Noun</option>
+                    <option value="2">Verb</option>
+                    <option value="3">Adjective</option>
+                    <option value="4">Adverb</option>
+                    <option value="5">Conjunction</option>
+                    <option value="6">Phrase</option>
+                    <option value="7">Preposition</option>
+                    <option value="8">Other</option>
+                </select>
+                <label asp-for="@Model.CardType" class="form-label">Type (optional)</label>
+            </div>
             <input type="hidden" asp-for="DeckId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Caarta-9addcceb-a295-4c8c-919c-7fa78f035567</UserSecretsId>
+	<OutputType>WinExe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +28,6 @@
 
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="wwwroot\uploads\" />
+    		<None Include="wwwroot\*" />
 	</ItemGroup>
-
 </Project>

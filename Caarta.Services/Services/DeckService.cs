@@ -10,11 +10,13 @@ namespace Caarta.Services.Services
     public class DeckService : IDeckService
     {
         private readonly IDeckRepository _deckRepository;
+        private readonly IDeckInCardlistRepository _deckInCardlistRepository;
         private readonly IUserSaveDeckRepository _userSaveDeckRepository;
         private readonly IMapper _mapper;
-        public DeckService(IDeckRepository deckRepository, IMapper mapper, IUserSaveDeckRepository userSaveDeckRepository)
+        public DeckService(IDeckRepository deckRepository, IDeckInCardlistRepository deckInCardlistRepository, IMapper mapper, IUserSaveDeckRepository userSaveDeckRepository)
         {
             _deckRepository = deckRepository;
+            _deckInCardlistRepository = deckInCardlistRepository;
             _mapper = mapper;
             _userSaveDeckRepository = userSaveDeckRepository;
         }
@@ -65,6 +67,15 @@ namespace Caarta.Services.Services
         {
             var save = _mapper.Map<UserSaveDeck>(userSaveDeckDTO);
             await _userSaveDeckRepository.DeleteAsync(save);
+        }
+
+        public async Task AddToCardlist(DeckInCardlistDTO deckInCardlistDTO)
+        {
+            await _deckInCardlistRepository.CreateAsync(new DeckInCardlist
+            {
+                DeckId = deckInCardlistDTO.DeckId,
+                CardlistId = deckInCardlistDTO.CardlistId
+            });
         }
     }
 }

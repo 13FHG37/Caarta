@@ -10,5 +10,6 @@ namespace Caarta.Data.Entities
         public string? FrontPictureUrl { get; set; }
         public string? BackText { get; set; }
         public string? BackPictureUrl { get; set; }
+        public byte? CardType { get; set; }
     }
 }

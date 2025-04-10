@@ -14,6 +14,7 @@ namespace Caarta.Data.Entities
         public string? ProfilePictureUrl { get; set; }
         public int ColorThemeId { get; set; }
         public virtual ICollection<Deck>? Created { get; set; }
+        public virtual ICollection<Cardlist>? CreatedCardlists { get; set; }
         public virtual ICollection<UserSaveDeck>? Saved { get; set; }
     }
 }

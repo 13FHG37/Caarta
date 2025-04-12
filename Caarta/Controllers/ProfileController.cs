@@ -68,6 +68,7 @@ namespace Caarta.Controllers
 
             var createUser = new UserEditViewModel()
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
                 ColorThemeId = user.ColorThemeId,

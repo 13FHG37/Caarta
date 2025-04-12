@@ -95,8 +95,13 @@
                                             <li><a class="dropdown-item text-danger" asp-controller="Decks" asp-action="Delete" asp-route-id="@deck.Id">Delete</a></li>
                                     }
                                     if (Model.CreatorId == currentUser.Id) {
-                                            <li><a class="dropdown-item" asp-controller="Decks" asp-action="Edit" asp-route-id="@deck.Id">Delete from this cardlist</a></li>
+                                            <li>
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="RemoveFromCardlist(@deck.Id, @Model.Id)">
+                                                    Remove from @Model.Name
+                                                </a>
+                                            </li>
                                     }
+                                        
                                 }
 
                             </ul>

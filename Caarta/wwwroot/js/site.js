@@ -20,7 +20,7 @@ function addCard() {
             <label class="form-label" for="CreateCards_${index}__BackText" >Front Text</label>
         </div>
         <div class="mb-3">
-            <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" id="CreateCards_${index}__BackPicture" name="CreateCards[${index}].FrontPicture" />
+            <input type="file" class="form-control" id="customFile" accept="image/jpeg, image/png" id="CreateCards_${index}__BackPicture" name="CreateCards[${index}].BackPicture" />
         </div>
         <div class="form-floating mb-3">
             <select id="CreateCards_${index}__CardType" name="CreateCards[${index}].CardType" class="form-control">
@@ -126,6 +126,19 @@ function AddToCardlist(deckId, cardlistId) {
         },
         error: function () {
             console.log('/Decks/AddToCardlist/' + deckId + "/" + cardlistId);
+        }
+    });
+}
+
+function RemoveFromCardlist(deckId, cardlistId) {
+    $.ajax({
+        url: '/Decks/RemoveFromCardlist/' + deckId + "/" + cardlistId,
+        type: 'GET',
+        success: function (data) {
+            console.log('Removed succesfully',);
+        },
+        error: function () {
+            console.log('/Decks/RemoveFromCardlist/' + deckId + "/" + cardlistId);
         }
     });
 }

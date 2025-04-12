@@ -412,7 +412,31 @@ namespace Caarta.Controllers
             };
             await _deckService.AddToCardlist(deckInCardlist);
 
-            return View();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        [Route("Decks/RemoveFromCardlist/{deckId}/{cardlistId}")]
+        public async Task<IActionResult> RemoveFromCardlist(int deckId, int cardlistId)
+        {
+            var deck = await _deckService.GetByIdAsync(deckId);
+            if (deck == null)
+            {
+                return NotFound();
+            }
+            var rfc = deck.Cardlists.Where(item => item.CardlistId == cardlistId).ToList()[0];
+            if (rfc == null)
+            {
+                return NotFound();
+            }
+            var rfcDto = new DeckInCardlistDTO()
+            {
+                DeckId = rfc.DeckId,
+                CardlistId = rfc.CardlistId
+            };
+            await _deckService.RemoveFromCardlist(rfcDto);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

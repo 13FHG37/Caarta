@@ -77,5 +77,11 @@ namespace Caarta.Services.Services
                 CardlistId = deckInCardlistDTO.CardlistId
             });
         }
+
+        public async Task RemoveFromCardlist(DeckInCardlistDTO deckInCardlistDTO)
+        {
+            var dfc = _mapper.Map<DeckInCardlist>(deckInCardlistDTO);
+            await _deckInCardlistRepository.DeleteAsync(dfc);
+        }
     }
 }
